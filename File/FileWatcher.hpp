@@ -79,7 +79,7 @@ namespace Gorilla
 		friend class FileWatcher;
 
 	private:
-		virtual void OnFileChanged(FileWatcher::Notification::Type _eType, const char* _szFilePath) = 0;
+		virtual void OnFileChanged(FileWatcher::Notification::Type _eType, const char* _szDirectoryPath, const char* _szRelativePath) = 0;
 	};
 }
 #endif

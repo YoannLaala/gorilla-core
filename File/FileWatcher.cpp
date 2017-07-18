@@ -75,7 +75,7 @@ namespace Gorilla
 			for(uint32 uiWatcher = 0; uiWatcher < uiWatcherCount; ++uiWatcher)
 			{
 				IFileWatcher* pFileWatcher = m_vWatcher[uiWatcher];
-				pFileWatcher->OnFileChanged(kNotification.Action, kNotification.FilePath.GetBuffer());
+				pFileWatcher->OnFileChanged(kNotification.Action, m_sDirectoryPath.GetBuffer(), kNotification.FilePath.GetBuffer());
 			}
 		}
 		m_vNotification.Clear();
