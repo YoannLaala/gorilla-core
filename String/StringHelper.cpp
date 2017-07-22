@@ -130,4 +130,19 @@ namespace Gorilla
 		// Finalize with real size
 		_sValueOut.Resize(uiRealSize);
 	}
+
+	//!	@brief		Split
+	//!	@date		2015-04-04
+	void StringHelper::Split(const char* _szValue, const char* _szSeparator, Vector<String>& _vResult)
+	{
+		const char* pStart = _szValue;
+		const char* pEnd = strstr(pStart, _szSeparator);
+		while (pEnd)
+		{
+			uint32 uiLength = static_cast<uint32>(pEnd - pStart);
+			if(uiLength) _vResult.Add().Set(pStart, uiLength-1);
+			pStart = ++pEnd;
+			pEnd = strstr(pStart, _szSeparator);
+		}
+	}
 }
