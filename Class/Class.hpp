@@ -35,7 +35,7 @@ public:																												\
 	inline static void*			New			() { return new _type_(); }												\
 	inline static const String&	GetName		() { static String sName(#_type_); return sName; }						\
 	inline static uint32		GetId		() { static uint32 uiId = Hash::Generate(#_type_); return uiId; }		\
-	inline static bool			HasFlag		(uint32 _eFlag) { return (_flag_ & _eFlag) != 0; }						\
+	inline static bool			HasFlag		(uint32 _eFlag) { return ((_flag_) & _eFlag) != 0; }					\
 private:																											\
 	static Class* m_pInstance;																						\
 };																													\
