@@ -20,10 +20,11 @@ namespace Gorilla
 		ConditionVariable();
 		~ConditionVariable();
 
-		void Wait(const Mutex& _kMutex);
+		void Wait();
 		void Signal();
 
 	private:
+		Mutex m_Mutex;
 		void* m_pHandle;
 	};
 }

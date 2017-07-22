@@ -29,10 +29,10 @@ namespace Gorilla
 
 	//!	@brief		Constructor
 	//!	@date		2015-05-15
-	void ConditionVariable::Wait(const Mutex& _kMutex)
+	void ConditionVariable::Wait()
 	{
 		CONDITION_VARIABLE* pConditionVariable = static_cast<CONDITION_VARIABLE*>(m_pHandle);
-		CRITICAL_SECTION* pCriticalSection = static_cast<CRITICAL_SECTION*>(_kMutex.m_pHandle);
+		CRITICAL_SECTION* pCriticalSection = static_cast<CRITICAL_SECTION*>(m_Mutex.m_pHandle);
 		SleepConditionVariableCS(pConditionVariable, pCriticalSection, INFINITE);
 	}
 
