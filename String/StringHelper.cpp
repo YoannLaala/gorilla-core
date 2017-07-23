@@ -139,8 +139,7 @@ namespace Gorilla
 		const char* pEnd = strstr(pStart, _szSeparator);
 		while (pEnd)
 		{
-			uint32 uiLength = static_cast<uint32>(pEnd - pStart);
-			if(uiLength) _vResult.Add().Set(pStart, uiLength-1);
+			_vResult.Add().Set(pStart, static_cast<uint32>(pEnd - pStart));
 			pStart = ++pEnd;
 			pEnd = strstr(pStart, _szSeparator);
 		}
