@@ -101,7 +101,8 @@ namespace Gorilla
 		static bool			IsFileExist			(const char* _szFilePath);
 		static File*		OpenAFile			(const char* _szFilePath, EAccess::Type _eAccess = EAccess::Read);
 		static void			CloseAFile			(File*& _pFile);
-
+		
+		static bool			Move				(const char* _szSource, const char* _szDestination);
 		static bool			CopyAFile			(const char* _szSource, const char* _szDestination);
 		static bool			IsDirectoryExist	(const char* _szFilePath);
 		static void			CreateADirectory	(const char* _szFilePath);

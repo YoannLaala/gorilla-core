@@ -99,6 +99,13 @@ namespace Gorilla
 		SAFE_CLOSE(_pFile);
 	}
 
+	//!	@brief		Move
+	//!	@date		2015-05-30
+	bool FileManager::Move(const char* _szSource, const char* _szDestination)
+	{
+		return ::MoveFile(_szSource, _szDestination) == TRUE;
+	}
+
 	//!	@brief		CopyAFile
 	//!	@date		2015-05-30
 	bool FileManager::CopyAFile(const char* _szSource, const char* _szDestination)
@@ -260,9 +267,7 @@ namespace Gorilla
 			FileWatcher* pFileWatcher = static_cast<FileWatcher*>(_pOverlapped->hEvent);
 			uint8* pBuffer = pFileWatcher->GetBuffer();
 
-			static uint8 uiIndex = 0;
 			static String sFilePath;
-			if(++uiIndex % 2 == 0)	// Be sure to avoid a second similar event
 			{
 				do
 				{
@@ -327,7 +332,7 @@ namespace Gorilla
 			// Handle created properly
 			if (hFile != INVALID_HANDLE_VALUE)
 			{
-				uint32 eFilter = FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME;
+				uint32 eFilter = FILE_NOTIFY_CHANGE_LAST_WRITE | FILE_NOTIFY_CHANGE_CREATION | FILE_NOTIFY_CHANGE_SIZE | FILE_NOTIFY_CHANGE_FILE_NAME | FILE_ACTION_ADDED | FILE_ACTION_REMOVED;
 				pFileWatcher = new FileWatcher(_szDirectoryPath, hFile, eFilter, _bIsRecursive);
 				m_vFileWatcher.Add(pFileWatcher);
 
