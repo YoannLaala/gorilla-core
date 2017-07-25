@@ -50,6 +50,7 @@ namespace Gorilla
 		{
 			m_sCommandLine.Append(" ").Append(_szArgument);
 		}
+		m_sCommandLine.Replace("\\", "/");
 	}
 
 	//!	@brief		Execute
