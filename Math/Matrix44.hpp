@@ -47,7 +47,7 @@ namespace Gorilla { namespace Math
 		inline const float32* operator[]		(uint32 _uiIndex) const { return m_mValue[_uiIndex]; }
 
 		inline Matrix44		operator*			(const Matrix44& _mOther) const { Matrix44 mResult(*this); mResult.Transform(_mOther); return mResult; }
-		inline Matrix44&	operator*=			(const Matrix44& _mOther) { Transform(_mOther); }
+		inline Matrix44&	operator*=			(const Matrix44& _mOther) { Transform(_mOther); return *this; }
 
 	private:
 		float32 m_mValue[4][4];
