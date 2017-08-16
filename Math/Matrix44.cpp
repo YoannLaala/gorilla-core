@@ -61,9 +61,9 @@ namespace Gorilla { namespace Math
 		m_mValue[3][3] = _mOther[3][3];
 	}
 
-	//!	@brief		SetRotation
+	//!	@brief		SetOrientation
 	//!	@date		2015-11-08
-	void Matrix44::SetRotation(const Quaternion& _qRotation)
+	void Matrix44::SetOrientation(const Quaternion& _qRotation)
 	{
 		// Get Axis and angle information
 		Math::Vector3 vAxis(2.0f * _qRotation.GetX(), 2.0f * _qRotation.GetY(), 2.0f * _qRotation.GetZ());
@@ -81,37 +81,29 @@ namespace Gorilla { namespace Math
 		m_mValue[0][0] = 1.0f - yy - zz;
 		m_mValue[1][0] = xy - zw;
 		m_mValue[2][0] = xz + yw;
-		m_mValue[3][0] = 0.0f;	
 
 		m_mValue[0][1] = xy + zw;
 		m_mValue[1][1] = 1.0f - xx - zz;
 		m_mValue[2][1] = yz - xw;
-		m_mValue[3][1] = 0.0f;		
-
+		
 		m_mValue[0][2] = xz - yw;
 		m_mValue[1][2] = yz + xw;
 		m_mValue[2][2] = 1.0f - xx - yy;
-		m_mValue[3][2] = 0.0f;	
-
-		m_mValue[0][3] = 0.0f;
-		m_mValue[1][3] = 0.0f;
-		m_mValue[2][3] = 0.0f;
-		m_mValue[3][3] = 1.0f;
 	}
 
-	//!	@brief		Transform
-	//!	@details	Combine all transformation
+	//!	@brief		Rotate
 	//!	@date		2015-11-08
-	void Matrix44::Transform(const Vector3& _vPosition, const Quaternion& _qRotation, const Vector3& _vScale)
+	void Matrix44::Rotate(const Quaternion& _qRotation)
 	{
-		SetRotation(_qRotation);
-		ApplyScale(_vScale);
-		ApplyTranslation(_vPosition);
+		Matrix44 mRotation;
+		mRotation.SetOrientation(_qRotation);
+
+		*this *= mRotation;
 	}
 
 	//!	@brief		Transform
 	//!	@date		2015-11-08
-	void Matrix44::Transform(const Matrix44& _mOther)
+	Matrix44& Matrix44::operator*=(const Matrix44& _mOther)
 	{
 		Matrix44 mThis(*this);
 
@@ -194,6 +186,8 @@ namespace Gorilla { namespace Math
 		m_mValue[3][3] += mThis[3][1] * _mOther[1][3];
 		m_mValue[3][3] += mThis[3][2] * _mOther[2][3];
 		m_mValue[3][3] += mThis[3][3] * _mOther[3][3];
+
+		return *this;
 	}
 
 	Matrix44 Matrix44::Inverse()

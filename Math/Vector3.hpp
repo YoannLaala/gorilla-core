@@ -53,7 +53,7 @@ namespace Gorilla { namespace Math
 		inline float32		Dot				(const Vector3& _vOther) const { return (m_fX * _vOther.GetX()) + (m_fY * _vOther.GetY()) + (m_fZ * _vOther.GetZ()); }
 		inline float32		LengthSquare	() const { return (m_fX * m_fX) + (m_fY * m_fY) + (m_fZ * m_fZ); }
 		float32				Length			() const;
-		inline void			Normalize		() { float32 fLengthInverse = 1.0f / Length(); Mul(fLengthInverse, fLengthInverse, fLengthInverse); }
+		void				Normalize		();
 
 		inline bool			operator==		(const Vector3& _vOther) const { return m_fX == _vOther.GetX() && m_fY == _vOther.GetY() && m_fZ == _vOther.GetZ(); }
 		inline bool			operator!=		(const Vector3& _vOther) const { return m_fX != _vOther.GetX() || m_fY != _vOther.GetY() || m_fZ != _vOther.GetZ(); }

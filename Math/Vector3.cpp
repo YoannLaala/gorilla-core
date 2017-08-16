@@ -51,4 +51,17 @@ namespace Gorilla { namespace Math
 	{ 
 		return sqrtf(LengthSquare()); 
 	}
+
+	//!	@brief		Normalize
+	//!	@date		2015-11-08
+	void Vector3::Normalize() 
+	{ 
+		float32 fLength = Length();
+		ASSERT(fLength > 0.0f, "Failed to normalilze vector with 0 length"); 
+		if(fLength)
+		{
+			float32 fLengthInverse = 1.0f / fLength;
+			Mul(fLengthInverse, fLengthInverse, fLengthInverse); 
+		}
+	}
 }}

@@ -63,19 +63,28 @@ namespace Gorilla { namespace Math
 	void Quaternion::Rotate(float32 _fPitchAngle, float32 _fYawAngle, float32 _fRollAngle)
 	{
 		//Pitch
-		_fPitchAngle *= 0.5f;
-		Quaternion qPitchAxis(sinf(_fPitchAngle), 0, 0, cosf(_fPitchAngle));
-		*this *= qPitchAxis;
+		if(_fPitchAngle)
+		{
+			_fPitchAngle *= 0.5f;
+			Quaternion qPitchAxis(sinf(_fPitchAngle), 0, 0, cosf(_fPitchAngle));
+			*this *= qPitchAxis;
+		}
 
 		// Yaw
-		_fYawAngle *= 0.5f;
-		Quaternion qYawAxis(0, sinf(_fYawAngle), 0, cosf(_fYawAngle));
-		*this *= qYawAxis;
+		if(_fYawAngle)
+		{
+			_fYawAngle *= 0.5f;
+			Quaternion qYawAxis(0, sinf(_fYawAngle), 0, cosf(_fYawAngle));
+			*this *= qYawAxis;
+		}
 
 		// Roll
-		_fRollAngle *= 0.5f;
-		Quaternion qRollAxis(0, 0, sinf(_fRollAngle), cosf(_fRollAngle));
-		*this *= qRollAxis;
+		if(_fRollAngle)
+		{
+			_fRollAngle *= 0.5f;
+			Quaternion qRollAxis(0, 0, sinf(_fRollAngle), cosf(_fRollAngle));
+			*this *= qRollAxis;
+		}
 	}
 
 	//!	@brief		Rotate
