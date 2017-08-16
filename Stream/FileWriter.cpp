@@ -42,7 +42,6 @@ namespace Gorilla
 	{
 		ASSERT(m_pFile == nullptr, "[FileManager] A file has to be closed before opening it again");
 		m_pFile = FileManager::OpenAFile(_szFilePath, FileManager::EAccess::Write);
-		ASSERT(m_pFile != nullptr, "[FileManager] Failled to write file '%s'", _szFilePath);
 		m_uiBufferPosition = 0;
 
 		return CanWrite();
