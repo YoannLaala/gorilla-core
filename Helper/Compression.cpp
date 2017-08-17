@@ -19,7 +19,7 @@ namespace Gorilla { namespace Helper
 		*reinterpret_cast<uint32*>(_pBufferCompressed) = _uiSizeDecompressed;
 
 		// Compress
-		_uiSizeCompressed = LZ4_compress_default((char*)_pBufferDecompressed, (char*)_pBufferCompressed + sizeof(uint32), _uiSizeDecompressed, uiBufferSize) + 1;
+		_uiSizeCompressed = LZ4_compress_default((char*)_pBufferDecompressed, (char*)_pBufferCompressed + sizeof(uint32), _uiSizeDecompressed, uiBufferSize) + sizeof(uint32);
 	}
 
 	//!	@brief		Decompress
@@ -31,6 +31,6 @@ namespace Gorilla { namespace Helper
 		
 		// Decompress
 		_pBufferDecompressed = new uint8[_uiSizeDecompressed];
-		LZ4_decompress_safe((char*)_pBufferCompressed + sizeof(uint32), (char*)_pBufferDecompressed, _uiSizeCompressed - 1, _uiSizeDecompressed);
+		LZ4_decompress_safe((char*)_pBufferCompressed + sizeof(uint32), (char*)_pBufferDecompressed, _uiSizeCompressed - sizeof(uint32), _uiSizeDecompressed);
 	}
 }}
