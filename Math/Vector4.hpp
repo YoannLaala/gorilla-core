@@ -82,7 +82,8 @@ namespace Gorilla { namespace Math
 		inline Vector4&		operator/=		(const Vector4& _vOther) { Div(_vOther.GetX(), _vOther.GetY(), _vOther.GetZ(), _vOther.GetW());  return *this; }
 		inline Vector4&		operator/=		(float32 _fValue) { float32 fInverse = 1.0f / _fValue; Mul(fInverse, fInverse, fInverse, fInverse);  return *this; }
 
-		inline float32		operator[]		(uint32 _uiIndex) const { return *((float32*)this) + _uiIndex; }
+		inline float32		operator[]		(uint32 _uiIndex) const { return reinterpret_cast<const float32*>(this)[_uiIndex]; }
+		inline float32&		operator[]		(uint32 _uiIndex) { return reinterpret_cast<float32*>(this)[_uiIndex]; }
 
 		inline float32		GetX			() const { return m_fX; }
 		inline float32		GetY			() const { return m_fY; }
