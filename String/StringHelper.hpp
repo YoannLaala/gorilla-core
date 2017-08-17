@@ -20,6 +20,9 @@ namespace Gorilla
 		static void			ToString16		(const char* _szText, uint32 _uiSize, String16& _sValueOut);
 		static void			ToString16		(const char* _szText, String16& _sValueOut);
 
+		static uint32		ToUint32		(const char* _szText, uint32 uiLength);
+		static float32		ToFloat32		(const char* _szText, uint32 uiLength);
+
 		static void			Split			(const char* _szValue, const char* _szSeparator, Vector<String>& _vResult);
 	};
 }

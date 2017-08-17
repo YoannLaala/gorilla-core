@@ -131,6 +131,40 @@ namespace Gorilla
 		_sValueOut.Resize(uiRealSize);
 	}
 
+	//!	@brief		ToUint32
+	//!	@date		2015-04-04
+	uint32 StringHelper::ToUint32(const char* _szText, uint32 uiLength)
+	{
+		uint32 uiValue = 0, uiMultiplier = 1;
+		for(int32 iCharacter = uiLength-1; iCharacter >= 0; --iCharacter)
+		{
+			uiValue += (_szText[iCharacter] - '0') * (uiMultiplier);
+			uiMultiplier *= 10;
+		}
+		
+		return uiValue;
+	}
+
+	//!	@brief		ToFloat32
+	//!	@date		2015-04-04
+	float32 StringHelper::ToFloat32(const char* _szText, uint32 uiLength)
+	{
+		int32 iValue = 0, uiMultiplier = 1, uiDecimal = 0;
+		for(int32 iCharacter = uiLength-1; iCharacter >= 0; --iCharacter)
+		{
+			if(_szText[iCharacter] == '.') uiDecimal = uiMultiplier;
+			else if(_szText[iCharacter] == '-') iValue *= -1;
+			else
+			{
+				iValue += (_szText[iCharacter] - '0') * (uiMultiplier);
+				uiMultiplier *= 10;
+			}
+		}
+		
+		if(uiDecimal) return iValue / static_cast<float32>(uiDecimal);
+		return static_cast<float32>(iValue);
+	}
+
 	//!	@brief		Split
 	//!	@date		2015-04-04
 	void StringHelper::Split(const char* _szValue, const char* _szSeparator, Vector<String>& _vResult)
