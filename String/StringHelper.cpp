@@ -169,13 +169,15 @@ namespace Gorilla
 	//!	@date		2015-04-04
 	void StringHelper::Split(const char* _szValue, const char* _szSeparator, Vector<String>& _vResult)
 	{
+		const uint32 uiSeparatorSize = static_cast<uint32>(strlen(_szSeparator));
 		const char* pStart = _szValue;
 		const char* pEnd = strstr(pStart, _szSeparator);
 		while (pEnd)
 		{
 			_vResult.Add().Set(pStart, static_cast<uint32>(pEnd - pStart));
-			pStart = ++pEnd;
+			pStart = pEnd + uiSeparatorSize;
 			pEnd = strstr(pStart, _szSeparator);
 		}
+		_vResult.Add().Set(pStart);
 	}
 }
