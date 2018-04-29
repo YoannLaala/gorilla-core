@@ -38,7 +38,7 @@ namespace Gorilla
 	template <class T>
 	T ArgumentParser::Get(const char* _szPattern)
 	{
-		T kValue;
+		T kValue = T();
 		const uint32 uiArgumentCount = m_vArgument.GetSize();
 		for(uint32 uiArgument = 0; uiArgument < uiArgumentCount; ++uiArgument)
 		{
@@ -49,7 +49,6 @@ namespace Gorilla
 				break; 
 			}
 		}
-
 		return kValue;
 	}
 }

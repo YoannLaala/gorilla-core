@@ -53,7 +53,7 @@ namespace Gorilla
 
 	//!	@brief		Get
 	//!	@date		2015-04-05
-	void Argument::Get(int& _iValueOut) const 
+	void Argument::Get(int32& _iValueOut) const 
 	{ 
 		_iValueOut = atoi(m_sValue.GetBuffer()); 
 	}

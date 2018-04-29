@@ -302,7 +302,7 @@ namespace Gorilla
 
 			case Node::Data::Buffer:
 			{
-				pWriterJson->String(szName);
+				if(szName) pWriterJson->String(szName);
 				pWriterJson->StartArray();
 
 				switch(_kNode.GetTypeExt())
