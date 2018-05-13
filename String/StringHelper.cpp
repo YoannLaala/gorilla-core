@@ -147,10 +147,17 @@ namespace Gorilla
 
 	//!	@brief		ToFloat32
 	//!	@date		2015-04-04
-	float32 StringHelper::ToFloat32(const char* _szText, uint32 uiLength)
+	float32 StringHelper::ToFloat32(const char* _szText, uint32 _uiLength)
 	{
-		int32 iValue = 0, uiMultiplier = 1, uiDecimal = 0;
-		for(int32 iCharacter = uiLength-1; iCharacter >= 0; --iCharacter)
+		return static_cast<float32>(ToFloat64(_szText, _uiLength));
+	}
+
+	//!	@brief		ToFloat64
+	//!	@date		2015-04-04
+	float64 StringHelper::ToFloat64(const char* _szText, uint32 _uiLength)
+	{
+		int64 iValue = 0, uiMultiplier = 1, uiDecimal = 0;
+		for(int32 iCharacter = _uiLength-1; iCharacter >= 0; --iCharacter)
 		{
 			if(_szText[iCharacter] == '.') uiDecimal = uiMultiplier;
 			else if(_szText[iCharacter] == '-') iValue *= -1;
@@ -161,8 +168,8 @@ namespace Gorilla
 			}
 		}
 		
-		if(uiDecimal) return iValue / static_cast<float32>(uiDecimal);
-		return static_cast<float32>(iValue);
+		if(uiDecimal) return iValue / static_cast<float64>(uiDecimal);
+		return static_cast<float64>(iValue);
 	}
 
 	//!	@brief		Split
