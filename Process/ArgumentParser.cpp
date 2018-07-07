@@ -102,4 +102,21 @@ namespace Gorilla
 			_sUsageOut.Append("\n", 1);
 		}
 	}
+
+	//!	@brief		GetArgument
+	//!	@date		2015-04-05
+	const ArgumentExtended* ArgumentParser::GetArgument(const char* _szPattern) const
+	{
+		const uint32 uiArgumentCount = m_vArgument.GetSize();
+		for(uint32 uiArgument = 0; uiArgument < uiArgumentCount; ++uiArgument)
+		{
+			const ArgumentExtended& kArgument = m_vArgument[uiArgument];
+			if(kArgument.Match(_szPattern))
+			{
+				return &kArgument;
+			}
+		}
+
+		return nullptr;
+	}
 }

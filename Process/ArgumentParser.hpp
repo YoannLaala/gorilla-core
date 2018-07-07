@@ -23,7 +23,12 @@ namespace Gorilla
 		void	GenerateUsage	(String& _sUsageOut) const;
 
 		template <class T>
-		T		Get				(const char* _szPattern);
+		T			Get			(const char* _szPattern) const;
+
+		inline bool Has			(const char* _szPattern) const { return GetArgument(_szPattern) != nullptr; }
+
+	private:
+		const ArgumentExtended* GetArgument(const char* _szPattern) const;
 
 	private:
 		String m_sTitle;
@@ -36,20 +41,16 @@ namespace Gorilla
 	//!	@details	Cast the value of a specific argument
 	//!	@date		2015-04-05
 	template <class T>
-	T ArgumentParser::Get(const char* _szPattern)
+	T ArgumentParser::Get(const char* _szPattern) const
 	{
-		T kValue = T();
-		const uint32 uiArgumentCount = m_vArgument.GetSize();
-		for(uint32 uiArgument = 0; uiArgument < uiArgumentCount; ++uiArgument)
+		T kValue;
+		const ArgumentExtended* pArgument = GetArgument(_szPattern);
+		if(pArgument)
 		{
-			const ArgumentExtended& kArgument = m_vArgument[uiArgument];
-			if(kArgument.Match(_szPattern))
-			{
-				kArgument.Get(kValue);
-				break; 
-			}
+			pArgument->Get(kValue);
 		}
-		return kValue;
+
+		return kValue;		
 	}
 }
 
