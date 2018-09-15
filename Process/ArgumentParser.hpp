@@ -43,14 +43,10 @@ namespace Gorilla
 	template <class T>
 	T ArgumentParser::Get(const char* _szPattern) const
 	{
-		T kValue;
 		const ArgumentExtended* pArgument = GetArgument(_szPattern);
-		if(pArgument)
-		{
-			pArgument->Get(kValue);
-		}
+		if(pArgument) return pArgument->Get<T>();
 
-		return kValue;		
+		return T();		
 	}
 }
 

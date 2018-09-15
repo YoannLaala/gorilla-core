@@ -24,11 +24,13 @@ namespace Gorilla
 		inline const String&	GetPattern() const	{ return m_sPattern; }
 		inline const String&	GetValue() const	{ return m_sValue; }
 
-		const String&			Get			() const;
-		void					Get			(bool& _bValueOut) const;
-		void					Get			(uint32& _uiValueOut) const;
-		void					Get			(int& _iValueOut) const;
-		void					Get			(String& _sValueOut) const;
+		template<typename T>
+		T						Get			() const;
+		template<> bool			Get			() const { return atoi(m_sValue.GetBuffer()) != 0; }
+		template<> uint32		Get			() const { return (uint32)atoi(m_sValue.GetBuffer()); }
+		template<> int32		Get			() const { return atoi(m_sValue.GetBuffer()); }
+		template<> const char*	Get			() const { return m_sValue.GetBuffer(); }
+		template<> String		Get			() const { return m_sValue; }
 
 	protected:
 		inline bool				Match		(const char* _szPattern) const { return m_sPattern == _szPattern; }
