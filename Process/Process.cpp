@@ -92,9 +92,14 @@ namespace Gorilla
 			) != 0;
 
 		// Successfully created the process.  Wait for it to finish.
+		String sStdOut, sStdError;
 		if(bSuccess)
-		{
-			WaitForSingleObject(kPocessInformation.hProcess, INFINITE);
+		{			
+			while(WaitForSingleObject(kPocessInformation.hProcess, 1) == WAIT_TIMEOUT)
+			{
+				ReadHandle(hOutputRead, sStdOut);
+				ReadHandle(hErrorRead, sStdError);
+			}			
 
 			// Get the ExitCode
 			DWORD dwExitCode;
@@ -105,8 +110,8 @@ namespace Gorilla
 		// Handle LogError
 		if(!bSuccess && _pResultOut)
 		{
-			ReadHandle(hOutputRead, *_pResultOut);
-			ReadHandle(hErrorRead, *_pResultOut);
+			ReadHandle(hErrorRead, sStdError);
+			*_pResultOut = sStdError;
 		}
 
 		// Close all pipe
