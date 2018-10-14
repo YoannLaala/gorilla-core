@@ -25,6 +25,44 @@
 ******************************************************************************/
 namespace Gorilla
 {
+	//!	@brief		IsFloat
+	bool StringHelper::IsFloat(const char* _szText, uint32 _uiLength)
+	{
+		bool bHasSeparator = false;
+		uint32 uiIndex = 0;
+		while(uiIndex < _uiLength)
+		{
+			char cCaharacter = _szText[uiIndex];
+			switch(cCaharacter)
+			{
+				case '-':
+				{
+					if(uiIndex !=0)
+						return false;
+					break;
+				}
+
+				case '.':
+				{
+					if(bHasSeparator)
+						return false;
+					bHasSeparator = true;
+					break;
+				}
+
+				default:
+				{
+					if(cCaharacter < '0' || cCaharacter > '9')
+						return false;
+					break;
+				}
+			}
+			++uiIndex;
+		}
+		
+		return true;
+	}
+
 	//!	@brief		ToString
 	//!	@date		2015-04-04
 	void StringHelper::ToString(const wchar_t* _szText, String& _sValueOut)

@@ -15,6 +15,8 @@ namespace Gorilla
 	class StringHelper
 	{
 	public:
+		static bool			IsFloat			(const char* _szText, uint32 _uiLength);
+
 		static void			ToString		(const wchar_t* _szText, uint32 _uiSize, String& _sValueOut);
 		static void			ToString		(const wchar_t* _szText, String& _sValueOut);
 		static void			ToString16		(const char* _szText, uint32 _uiSize, String16& _sValueOut);
