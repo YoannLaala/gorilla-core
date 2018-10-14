@@ -265,7 +265,9 @@ namespace Gorilla
 	void Dictionary::GetBufferInternalGENERIC(Data* _pData, const T** _ppBuffer, uint32& _uiCount)
 	{
 		if(_pData->Format == Data::Buffer)
-		{			
+		{
+			TData<Data::Buffer>* pTData = reinterpret_cast<TData<Data::Buffer>*>(_pData);
+			ASSERT(pTData->FormatChild == Data::String ? true : pTData->FormatChild == Helper::StaticType<T>::Value, "[Dictionary] Buffer type mismatch");
 			*_ppBuffer = reinterpret_cast<T*>(reinterpret_cast<uint8*>(_pData) + sizeof(TData<Data::Buffer>));
 			_uiCount = reinterpret_cast<TData<Data::Buffer>*>(_pData)->Count;
 			return;
@@ -277,7 +279,7 @@ namespace Gorilla
 	template <typename T>
 	T* Dictionary::AddBufferInternalGENERIC(Data* _pParent, const char* _szName, uint32 _uiCount)
 	{
-		TData<Data::Buffer>* pTData = reinterpret_cast<TData<Data::Buffer>*>(CreateData(_pParent, Data::Buffer, _szName, sizeof(Data::Buffer) + sizeof(T) * _uiCount));
+		TData<Data::Buffer>* pTData = reinterpret_cast<TData<Data::Buffer>*>(CreateData(_pParent, Data::Buffer, _szName, sizeof(TData<Data::Buffer>) + sizeof(T) * _uiCount));
 		pTData->Count = _uiCount;
 		pTData->FormatChild = Helper::StaticType<T>::Value;
 		return reinterpret_cast<T*>(reinterpret_cast<uint8*>(pTData) + sizeof(TData<Data::Buffer>));

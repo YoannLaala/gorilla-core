@@ -526,7 +526,7 @@ namespace Gorilla
 		_vValue.Clear();
 
 		// Retrieve pointer
-		T* pBuffer; uint32 uiCount;
+		const T* pBuffer; uint32 uiCount;
 		GetValue(&pBuffer, uiCount);
 
 		// Copy to Vector
