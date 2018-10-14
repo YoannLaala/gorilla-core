@@ -32,8 +32,5 @@ namespace Gorilla
 		{
 			memset(_pDestination, _iValue, uiSize);
 		}
-
-		// Compare
-		template <> bool CompareKey(const char* _szKeyA, const char* _szKeyB) { return strcmp(_szKeyA, _szKeyB) == 0; }
 	}
 }

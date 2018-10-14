@@ -49,13 +49,15 @@ namespace Gorilla
 			{
 				enum Type
 				{
-					Used = 0,
-					Unused = -1,
-					Removed = -2,
+					Removed = -1,
+					Unused = 0,
+					Used = 1,
 				};
 			};
 
-			inline bool		IsAvailable() const { return State < 0; }
+			Node() : State(EState::Unused) { }
+
+			inline bool		IsAvailable() const { return State <= 0; }
 
 			TYPE					Value;
 			KEY						Key;
@@ -124,7 +126,7 @@ namespace Gorilla
 	template <typename KEY, typename TYPE>
 	HashMap<KEY, TYPE>::HashMap()
 	{
-		Container::Set(m_aStack, -1, HASH_MAP_STACK_CAPACITY * sizeof(Node));
+		//Container::Set(m_aStack, -1, HASH_MAP_STACK_CAPACITY * sizeof(Node));
 		m_vNode.SetBuffer(m_aStack, 0, HASH_MAP_STACK_CAPACITY, false);
 	}
 
@@ -220,7 +222,7 @@ namespace Gorilla
 		while (uiNodeIndex < _uiCapacity)
 		{
 			const HashMap<KEY, TYPE>::Node* pNode = &_pArray[uiNodeIndex];
-			if (pNode->IsAvailable() || Container::CompareKey(_kKey, pNode->Key))
+			if (pNode->IsAvailable() || _kKey == pNode->Key)
 			{
 				return pNode;
 			}
@@ -244,7 +246,7 @@ namespace Gorilla
 
 			// Allocate new array and set proper capacity
 			Node* pNewArray = new Node[_uiCapacity];
-			memset(pNewArray, -1, _uiCapacity * sizeof(Node));
+			//memset(pNewArray, -1, _uiCapacity * sizeof(Node));
 
 			// Iterates old array to reaffect all iterator
 			while (pElement != pEnd)
@@ -272,7 +274,7 @@ namespace Gorilla
 			return const_cast<TYPE&>(pNode->Value);
 		}
 		
-		static const TYPE DefaultValue = (TYPE)0;
+		static const TYPE DefaultValue = (TYPE)-1;
 		return const_cast<TYPE&>(DefaultValue);
 	}
 }

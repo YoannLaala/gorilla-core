@@ -43,17 +43,6 @@ namespace Gorilla
 		void CopyString(char* _pDestination, const char* _pSource, uint32 _uiSize);
 
 		void Set(void* _pDestination, int32 _iValue, uint32 uiSize);
-
-		//!	@brief		CompareKey
-		//!	@date		2016-01-23
-		template <typename T>
-		inline bool CompareKey(T _kKeyA, T _kKeyB) { return _kKeyA == _kKeyB; }
-
-		//!	@brief		CompareKey
-		//	@details	Just here to override the key comparaison for char*
-		//				otherwise ust use operator==()
-		//!	@date		2016-01-23
-		template <> bool CompareKey(const char* _szKeyA, const char* _szKeyB);
 	}
 }
 
