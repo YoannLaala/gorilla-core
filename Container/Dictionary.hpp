@@ -269,7 +269,7 @@ namespace Gorilla
 			TData<Data::Buffer>* pTData = reinterpret_cast<TData<Data::Buffer>*>(_pData);
 			ASSERT(pTData->FormatChild == Data::String ? true : pTData->FormatChild == Helper::StaticType<T>::Value, "[Dictionary] Buffer type mismatch");
 			*_ppBuffer = reinterpret_cast<T*>(reinterpret_cast<uint8*>(_pData) + sizeof(TData<Data::Buffer>));
-			_uiCount = reinterpret_cast<TData<Data::Buffer>*>(_pData)->Count;
+			_uiCount = pTData->Count;
 			return;
 		}
 		*_ppBuffer = nullptr; _uiCount = 0;
