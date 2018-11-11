@@ -97,7 +97,7 @@ namespace Gorilla
 
 		Data*				CreateData(Data* _pParent, Data::Type _eData, const char* _szName, uint32 _uiSize);
 		Data*				AllocateData(Data::Type _eData, uint32 _uiSize);
-		bool				ReallocateData(Data* _pData, uint32 _uiNewSize); 
+		Data*				ReallocateData(Data* _pData, uint32 _uiNewSize); 
 
 		Data*				CreateData(Data::Type _eData, uint32 _uiSize);
 		
@@ -201,9 +201,11 @@ namespace Gorilla
 	{
 		// Reallocate Data if possible
 		uint32 uiNewSize = _uiLength + 1;
-		if(!ReallocateData(_pData, sizeof(TData<Data::String>) + uiNewSize))
+		_pData = ReallocateData(_pData, sizeof(TData<Data::String>) + uiNewSize);
+		if(!_pData)
 		{
 			ASSERT(false, "[Dictionary] Reallocation failed");
+			return;
 		}
 
 		// Copy Data
@@ -220,7 +222,8 @@ namespace Gorilla
 	{
 		// Reallocate Data if possible
 		uint32 uiNewSize = sizeof(T) * _uiCount;
-		if(!ReallocateData(_pData, sizeof(TData<Data::Buffer>) + uiNewSize))
+		_pData = ReallocateData(_pData, sizeof(TData<Data::Buffer>) + uiNewSize);
+		if(!_pData)
 		{
 			ASSERT(false, "[Dictionary] Reallocation failed");
 		}
@@ -241,9 +244,11 @@ namespace Gorilla
 		uint32 uiNewSize = 0;
 		for(uint32 uiValue = 0; uiValue < _uiCount; ++uiValue) uiNewSize += _pBuffer[uiValue].GetLength();
 		uiNewSize += _uiCount; // final character for each string
-		if(!ReallocateData(_pData, sizeof(TData<Data::Buffer>) + uiNewSize))
+		_pData = ReallocateData(_pData, sizeof(TData<Data::Buffer>) + uiNewSize);
+		if(!_pData)
 		{
 			ASSERT(false, "[Dictionary] Reallocation failed");
+			return;
 		}
 				
 		// Copy Data

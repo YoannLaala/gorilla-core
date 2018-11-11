@@ -231,26 +231,30 @@ namespace Gorilla
 
 	//!	@brief		ReallocateData
 	//!	@date		2015-04-04
-	bool Dictionary::ReallocateData(Data* _pData, uint32 _uiNewSize) 
+	Node::Data* Dictionary::ReallocateData(Data* _pData, uint32 _uiNewSize) 
 	{
 		uint32 uiOldSize = Helper::SizeOf(_pData);
 		if(_uiNewSize <= uiOldSize)
 		{
-			return true;
+			return _pData;
 		}
-		else
+		// Check if this is the last node for now
+		else if(m_kLastId.PageOffset == m_uiOffset - uiOldSize)
 		{
-			// Check if there is enough space in current page (and if this is the last node)
-			uint32 uiByteLeft = DICTIONARY_PAGE_SIZE - _uiNewSize;
-			if(uiByteLeft >= _uiNewSize && m_kLastId.PageOffset == m_uiOffset - uiOldSize)
+			uint32 uiByteLeft = DICTIONARY_PAGE_SIZE - m_kLastId.PageOffset;
+			if(uiByteLeft >= _uiNewSize)
 			{
 				m_pBuffer = reinterpret_cast<uint8*>(_pData) + _uiNewSize;
 				m_uiOffset = m_kLastId.PageOffset + _uiNewSize;
-				return true;
+				return _pData;
+			}
+			else
+			{
+				return AllocateData((Node::Data::Type)_pData->Format, _uiNewSize);
 			}
 		}
 
-		return false;
+		return nullptr;
 	}
 
 	//!	@brief		AddPage
