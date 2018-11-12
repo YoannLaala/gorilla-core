@@ -154,6 +154,9 @@ namespace Gorilla
 	void Vector<TYPE>::Add(const Vector<TYPE>& _vValue)
 	{
 		const uint32 uiOtherSize = _vValue.GetSize();
+		if(uiOtherSize == 0)
+			return;
+
 		const uint32 uiNewSize = m_uiSize + uiOtherSize;
 		if (uiNewSize > m_uiCapacity)
 		{
@@ -163,7 +166,7 @@ namespace Gorilla
 		// Set all the value
 		for (uint32 uiElement = 0; uiElement < uiOtherSize; ++uiElement)
 		{
-			m_pArray[uiElement] = _vValue[uiElement];
+			m_pArray[m_uiSize+uiElement] = _vValue[uiElement];
 		}
 		m_uiSize = uiNewSize;
 	}
