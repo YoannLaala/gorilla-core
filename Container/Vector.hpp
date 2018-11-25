@@ -182,7 +182,7 @@ namespace Gorilla
 		{
 			Add();
 
-			uint32 uiByteToMoveCount = (m_uiSize - 1) * sizeof(TYPE);
+			uint32 uiByteToMoveCount = (m_uiSize - 1 - _uiIndex) * sizeof(TYPE);
 			if(uiByteToMoveCount)
 			{
 				memmove_s(&m_pArray[_uiIndex+1], uiByteToMoveCount, &m_pArray[_uiIndex], uiByteToMoveCount);
