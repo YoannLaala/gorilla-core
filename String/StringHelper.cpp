@@ -28,25 +28,67 @@ namespace Gorilla
 	//!	@brief		IsFloat
 	bool StringHelper::IsFloat(const char* _szText, uint32 _uiLength)
 	{
-		bool bHasSeparator = false;
+		struct EFlag
+		{
+			enum Type: uint8
+			{
+				SEPARATOR	= 1 << 0,
+				EXPONENT	= 1 << 1,
+			};
+		};
+
+		uint8 eFlag = 0;
 		uint32 uiIndex = 0;
 		while(uiIndex < _uiLength)
 		{
 			char cCaharacter = _szText[uiIndex];
 			switch(cCaharacter)
 			{
+				case '+':
 				case '-':
 				{
-					if(uiIndex !=0)
-						return false;
+					// negative sign are possible with exponent
+					if((eFlag & EFlag::EXPONENT) != 0)
+					{
+						// previous character must be exponent
+						if(_szText[uiIndex-1] != 'e' && _szText[uiIndex-1] != 'E')
+							return false;
+					}
+					else
+					{
+						if(uiIndex != 0)
+							return false;
+					}
+					
 					break;
 				}
 
+				case ',':
 				case '.':
 				{
-					if(bHasSeparator)
+					if((eFlag & EFlag::SEPARATOR) != 0)
 						return false;
-					bHasSeparator = true;
+					eFlag |= EFlag::SEPARATOR;
+					break;
+				}
+
+				case 'e':
+				case 'E':
+				{
+					if(uiIndex == 0)
+						return false;
+
+					if((eFlag & EFlag::EXPONENT) != 0)
+						return false;
+					eFlag |= EFlag::EXPONENT;
+					break;
+				}
+
+				case 'f':
+				case 'd':
+				{
+					if(uiIndex != _uiLength-1)
+						return false;
 					break;
 				}
 
@@ -194,20 +236,80 @@ namespace Gorilla
 	//!	@date		2015-04-04
 	float64 StringHelper::ToFloat64(const char* _szText, uint32 _uiLength)
 	{
-		int64 iValue = 0, uiMultiplier = 1, uiDecimal = 0;
-		for(int32 iCharacter = _uiLength-1; iCharacter >= 0; --iCharacter)
+		float64 fFactor = 1.0f;
+		uint32 uiIndex = 0, uiSeparatorIndex = (uint32)-1, uiNumber = 0;
+		uint32 uiMultiplier = 0, uiDivider = 0;
+		int64 iValue = 0;
+		while(uiIndex < _uiLength)
 		{
-			if(_szText[iCharacter] == '.') uiDecimal = uiMultiplier;
-			else if(_szText[iCharacter] == '-') iValue *= -1;
-			else
+			char cCaharacter = _szText[uiIndex];
+			switch(cCaharacter)
 			{
-				iValue += (_szText[iCharacter] - '0') * (uiMultiplier);
-				uiMultiplier *= 10;
+				// -0.5
+				case '-':
+				{
+					fFactor = -1.0f;
+					break;
+				}
+
+				// 0,5
+				case ',':
+				case '.':
+				{
+					uiSeparatorIndex = uiNumber;
+					break;
+				}
+
+				// 0.5e1
+				case 'e':
+				case 'E':
+				{
+					if(_szText[++uiIndex] == '-')
+						uiDivider = (_szText[++uiIndex] - '0');
+					else if(_szText[uiIndex] == '+')
+						uiMultiplier = (_szText[++uiIndex] - '0');
+					else
+						uiMultiplier = (_szText[uiIndex] - '0');
+					break;
+				}
+
+				// 0.5f 0.5d
+				case 'f':
+				case 'd':
+				{
+					break;
+				}
+
+				default:
+				{
+					iValue = iValue * 10 + (cCaharacter - '0');
+					++uiNumber;
+					break;
+				}
 			}
+			++uiIndex;
 		}
 		
-		if(uiDecimal) return iValue / static_cast<float64>(uiDecimal);
-		return static_cast<float64>(iValue);
+		// apply separator to divider
+		if(uiSeparatorIndex != (uint32)-1)
+			uiDivider += (uiNumber - uiSeparatorIndex);
+
+		// compute final factor
+		if(uiDivider > uiMultiplier)
+		{
+			for(uint32 i = 0; i < uiDivider-uiMultiplier; ++i)
+				fFactor *= 10;
+			fFactor = 1.0f / fFactor;
+		}
+		else if (uiDivider < uiMultiplier)
+		{
+			for(uint32 i = 0; i < uiMultiplier - uiDivider; ++i)
+				fFactor *= 10;
+		}
+		
+		float64 result = iValue * fFactor;
+
+		return result;
 	}
 
 	//!	@brief		Split
