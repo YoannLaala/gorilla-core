@@ -215,11 +215,10 @@ namespace Gorilla
 	//!	@date		2015-04-04
 	uint32 StringHelper::ToUint32(const char* _szText, uint32 uiLength)
 	{
-		uint32 uiValue = 0, uiMultiplier = 1;
-		for(int32 iCharacter = uiLength-1; iCharacter >= 0; --iCharacter)
+		uint32 uiValue = 0;
+		for(uint32 uiCharacter = 0; uiCharacter < uiLength; ++uiCharacter)
 		{
-			uiValue += (_szText[iCharacter] - '0') * (uiMultiplier);
-			uiMultiplier *= 10;
+            uiValue = uiValue * 10 +  (_szText[uiCharacter] - '0');
 		}
 		
 		return uiValue;
@@ -264,13 +263,33 @@ namespace Gorilla
 				case 'e':
 				case 'E':
 				{
-					if(_szText[++uiIndex] == '-')
-						uiDivider = (_szText[++uiIndex] - '0');
-					else if(_szText[uiIndex] == '+')
-						uiMultiplier = (_szText[++uiIndex] - '0');
-					else
-						uiMultiplier = (_szText[uiIndex] - '0');
-					break;
+                    ++uiIndex;
+                    int32 uiExponentSize = _szText[_uiLength-1] == 'f' || _szText[_uiLength-1] == 'd' ? -1 : 0;
+                    switch(_szText[uiIndex])
+                    {
+                        case '-':
+                        {
+                            uiExponentSize += _uiLength-++uiIndex;
+                            uiDivider = ToUint32(&_szText[uiIndex], uiExponentSize);
+                            break;
+                        }
+
+                        case '+':
+                        {
+                            uiExponentSize += _uiLength-++uiIndex;
+                            uiMultiplier = ToUint32(&_szText[uiIndex], uiExponentSize);
+                            break;
+                        }
+
+                        default:
+                        {
+                            uiExponentSize += _uiLength-uiIndex;
+                            uiMultiplier = ToUint32(&_szText[uiIndex], uiExponentSize);
+                            break;
+                        }
+                    }
+                    uiIndex += uiExponentSize;
+                    break;
 				}
 
 				// 0.5f 0.5d
