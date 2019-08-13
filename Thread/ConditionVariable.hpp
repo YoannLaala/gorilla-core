@@ -1,13 +1,7 @@
 #ifndef _CORE_CONDITION_VARIABLE_HPP_
 #define _CORE_CONDITION_VARIABLE_HPP_
 
-/******************************************************************************
-**	Forward Declaration
-******************************************************************************/
-namespace Gorilla
-{
-	class Mutex;
-}
+#include <Core/Thread/Mutex.hpp>
 
 /******************************************************************************
 **	Class Declaration
