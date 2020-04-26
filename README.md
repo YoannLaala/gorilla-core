@@ -1,21 +1,38 @@
 # Gorilla Core
-Gorilla Core library offers standard c++ classes .
+Gorilla Core is cross platform library offering light & fast standard c++ classes.
 
-# Source organization
-- Class 		-> C++ RTTI management
-- Container 	-> Vector, hashmap, dictionary, etc
-- File 			-> File management
-- Helper 		-> Windows wrapper, compression, etc
-- Input 		-> Input management
-- Log 			-> Log  management
-- Math 			-> Vector, matrix, quaternion, etc
-- Memory 		-> Memory management
-- Process 		-> Subprocess call, command line parser, etc
-- Steam			-> Input/ouput stream
-- String		-> Ansi, utf8, utf16, etc
-- Thread		-> Thread, mutex, condition variable, etc
-- ThirdParty	-> RapidJson, etc
-- Time			-> Time management, profiler, etc
+# Sources organization
+## Container
+Severals data structure designed to hold data in a contigous memory block limiting heap allocations. `Vector` and `HashMap` are classic but fast. `Dictionary` is a fast tree structure allowing toi output different format such as binary, json, csv.
 
-# Platorms
-Windows is the only platform supported at the moment.
+## File System
+Regrouping I/O operations using file access through `FileSystem` class. A file reprensentation is provided by `File`. You have also the possibility to use `Path` to format, combine or extract information needed.
+
+## Log
+You can easily log in your application using severals defines that will provide default formating
+
+    LOG_MESSAGE
+    LOG_WARNING
+    LOG_ERROR
+    LOG_ASSERT
+
+## Memory
+
+A memory manager is provided to check and follow all allocations of your applications. It can also be used as a statistics on different allocations category.
+
+## Process
+Create a subprocess and get result from. An agurment parser is also present to easily parse command line arguments
+
+## Stream
+Input/Output streams in file or memory. Specific streams format are also present for the dictionary such as binary, json and csv.
+
+## String
+Support ASCII, UTF8 and UTF16 using `String` and `String16`. You can also make convertion between those using `StringHelper`. This class also provide numbers conversion from/to string.
+
+## Time
+Contains classes related to times aiming profiling and update system time based.
+
+# Supported Platorms
+    - Windows
+    - macOS
+    - Linux

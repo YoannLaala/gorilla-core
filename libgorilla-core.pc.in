@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/lib
+includedir=${prefix}/include
+
+Name: Gorilla Core
+Description: Cross platform library offering light & fast standard c++ classes
+Version: 1.0.0
+Libs: -L${libdir} @PC_LINK_FLAGS@
+Cflags: -I${includedir}
