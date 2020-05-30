@@ -2,6 +2,7 @@
 #include "hash.hpp"
 #include "signal.hpp"
 #include "singleton.hpp"
+#include "container/buffer_queue.hpp"
 #include "container/dictionary.hpp"
 #include "container/hash_map.hpp"
 #include "container/vector.hpp"
@@ -503,6 +504,90 @@ void test_vector()
     TEST(values.get_size() == 2);
     TEST(values.get_capacity() == 4);
     TEST(values[1] == 3);
+}
+
+void test_buffer_queue()
+{
+    BufferQueue queue;
+
+    TEST(queue.is_empty() == true);
+    TEST(queue.get_size() == 0)
+    TEST(queue.get_capacity() == 0);
+    TEST(queue.pop() == nullptr);
+
+    uint8_t data1[] = { 0, 1, 2, 3};
+    uint64_t data2[] = { 0, 1, 2, 3};
+    float data3[] = { 0.5f, 1.5f, 2.5f, 3.5f};
+
+    queue.push(data1, sizeof(data1));
+    queue.push(data2, sizeof(data2));
+    queue.push(data3, sizeof(data3));
+
+    uint8_t *data4 = (uint8_t*)queue.push(4);
+    data4[0] = 4;
+    data4[1] = 5;
+    data4[2] = 6;
+    data4[3] = 7;
+
+    TEST(queue.is_empty() == false);
+    TEST(queue.get_size() == 72)
+    TEST(queue.get_capacity() >= queue.get_size());
+    uint32_t max_size = queue.get_size();
+    uint32_t max_capacity = queue.get_capacity();
+
+    TEST(MEMCMP(queue.pop(), data1, sizeof(data1)) == 0);
+    TEST(MEMCMP(queue.pop(), data2, sizeof(data2)) == 0);
+    TEST(MEMCMP(queue.pop(), data3, sizeof(data3)) == 0);
+    TEST(MEMCMP(queue.pop(), data4, 4*sizeof(uint8_t)) == 0);
+
+    TEST(queue.get_size() == 0)
+    TEST(queue.get_capacity() >= queue.get_size());
+    queue.clear();
+    TEST(queue.get_size() == 0);
+    TEST(queue.pop() == nullptr);
+
+    queue.push(data1, sizeof(data1));
+    queue.push(data2, sizeof(data2));
+    TEST(MEMCMP(queue.pop(), data1, sizeof(data1)) == 0);
+    queue.push(data3, sizeof(data3));
+    TEST(MEMCMP(queue.pop(), data2, sizeof(data2)) == 0);
+    TEST(MEMCMP(queue.pop(), data3, sizeof(data3)) == 0);
+    TEST(queue.pop() == nullptr);
+
+    queue.push(data1, sizeof(data1));
+    queue.push(data2, sizeof(data2));
+    queue.push(data3, sizeof(data3));
+    queue.push(4);
+    TEST(queue.get_size() == max_size)
+    TEST(queue.get_capacity() == max_capacity)
+
+    TEST(MEMCMP(queue.pop(), data1, sizeof(data1)) == 0);
+    TEST(MEMCMP(queue.pop(), data2, sizeof(data2)) == 0);
+    TEST(MEMCMP(queue.pop(), data3, sizeof(data3)) == 0);
+    TEST(MEMCMP(queue.pop(), data4, 4*sizeof(uint8_t)) == 0);
+    TEST(queue.get_size() == 0)
+    TEST(queue.get_capacity() == max_capacity);
+
+    BufferQueue queue2;
+    queue2.swap(queue);
+
+    TEST(queue.is_empty() == true);
+    TEST(queue.get_size() == 0)
+    TEST(queue.get_capacity() == 0);
+
+    queue2.push(data1, sizeof(data1));
+    queue2.push(data2, sizeof(data2));
+    queue2.push(data3, sizeof(data3));
+    queue2.push(4);
+    TEST(queue2.get_size() == max_size)
+    TEST(queue2.get_capacity() == max_capacity)
+
+    TEST(MEMCMP(queue2.pop(), data1, sizeof(data1)) == 0);
+    TEST(MEMCMP(queue2.pop(), data2, sizeof(data2)) == 0);
+    TEST(MEMCMP(queue2.pop(), data3, sizeof(data3)) == 0);
+    TEST(MEMCMP(queue2.pop(), data4, 4*sizeof(uint8_t)) == 0);
+    TEST(queue2.get_size() == 0)
+    TEST(queue2.get_capacity() == max_capacity);
 }
 
 void test_dictionary_json(Dictionary *dictionary)
@@ -1124,6 +1209,7 @@ int32_t main(int32_t argc, const char *argv[])
         {"hash",                &test_hash},
         {"singleton",           &test_singleton},
         {"vector",              &test_vector},
+        {"buffer_queue",        &test_buffer_queue},
         {"signal",              &test_signal},
         {"hash_map",            &test_hash_map},
         {"memory",              &test_memory},
