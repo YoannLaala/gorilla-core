@@ -3,6 +3,7 @@
 #include "signal.hpp"
 #include "singleton.hpp"
 #include "container/buffer_queue.hpp"
+#include "container/command_queue.hpp"
 #include "container/dictionary.hpp"
 #include "container/hash_map.hpp"
 #include "container/vector.hpp"
@@ -588,6 +589,74 @@ void test_buffer_queue()
     TEST(MEMCMP(queue2.pop(), data4, 4*sizeof(uint8_t)) == 0);
     TEST(queue2.get_size() == 0)
     TEST(queue2.get_capacity() == max_capacity);
+}
+
+int command_queue_callback_0()
+{
+    return -1;
+}
+
+int command_queue_callback_1(void *data)
+{
+    **(int**)(data) = 3;
+    return 1;
+}
+
+int command_queue_callback_2(void *data)
+{
+    **(int**)(data) = 2;
+    return 2;
+}
+
+struct CommandQueueStruct
+{
+    int command_queue_callback_3()
+    {
+        return 3;
+    }
+
+    int command_queue_callback_4(void *data)
+    {
+        **(int**)(data) = 1;
+        return 4;
+    }
+};
+
+void test_command_queue()
+{
+    CommandQueueStruct object;
+    CommandQueue queue;
+
+    TEST(queue.is_empty() == true);
+    TEST(queue.get_size() == 0)
+    TEST(queue.get_capacity() == 0);
+    TEST(queue.pop() == 0);
+
+    int value = 0;
+    queue.push(&command_queue_callback_0);
+    TEST(queue.pop() == -1);
+    TEST(queue.pop() == 0);
+
+    queue.push(&command_queue_callback_1, &value);
+    queue.push(&command_queue_callback_2, &value);
+    queue.push<CommandQueueStruct, &CommandQueueStruct::command_queue_callback_3>(&object);
+    queue.push<CommandQueueStruct, &CommandQueueStruct::command_queue_callback_4>(&object, &value);
+
+    TEST(queue.is_empty() == false);
+    TEST(queue.get_capacity() >= queue.get_size());
+
+    TEST(value == 0);
+    TEST(queue.pop() == 1);
+    TEST(value == 3);
+    TEST(queue.pop() == 2);
+    TEST(value == 2);
+    TEST(queue.pop() == 3);
+    TEST(value == 2);
+    TEST(queue.pop() == 4);
+    TEST(value == 1);
+
+    TEST(queue.is_empty() == true);
+    TEST(queue.get_size() == 0);
 }
 
 void test_dictionary_json(Dictionary *dictionary)
@@ -1210,6 +1279,7 @@ int32_t main(int32_t argc, const char *argv[])
         {"singleton",           &test_singleton},
         {"vector",              &test_vector},
         {"buffer_queue",        &test_buffer_queue},
+        {"command_queue",       &test_command_queue},
         {"signal",              &test_signal},
         {"hash_map",            &test_hash_map},
         {"memory",              &test_memory},

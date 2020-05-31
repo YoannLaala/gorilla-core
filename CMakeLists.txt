@@ -20,6 +20,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/signal.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/singleton.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/buffer_queue.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/container/command_queue.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/dictionary.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/dictionary_data.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/dictionary_node.hpp
@@ -57,6 +58,7 @@ set(HEADERS
 set(SOURCES
     ${CMAKE_CURRENT_SOURCE_DIR}/src/hash.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/buffer_queue.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/container/command_queue.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/dictionary.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/container/dictionary_node.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/file_system/path.cpp
@@ -129,6 +131,7 @@ add_test(vector             unit-tests vector)
 add_test(signal             unit-tests signal)
 add_test(hash_map           unit-tests hash_map)
 add_test(buffer_queue       unit-tests buffer_queue)
+add_test(command_queue      unit-tests command_queue)
 add_test(memory             unit-tests memory)
 add_test(string             unit-tests string)
 add_test(string16           unit-tests string16)
