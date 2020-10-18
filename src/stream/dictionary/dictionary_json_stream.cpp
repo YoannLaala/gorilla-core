@@ -546,7 +546,7 @@ namespace Gorilla
                 return false;
 
         uint32_t offset = 0;
-        if (!write_callback(stream, buffer, &offset))
+        if (!write_callback(stream, buffer, &offset, true))
             return false;
 
         for (uint32_t i = 1; i < buffer_count; ++i)
@@ -557,7 +557,7 @@ namespace Gorilla
             if (!write_operation(stream, Operation::INDENT, level, flags))
                 return false;
 
-            if (!write_callback(stream, buffer, &offset))
+            if (!write_callback(stream, buffer, &offset, true))
                 return false;
         }
 

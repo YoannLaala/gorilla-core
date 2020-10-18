@@ -431,15 +431,14 @@ namespace Gorilla
                         const uint8_t *buffer = nullptr;
                         child.get_buffer_uint8(&buffer, &count);
 
+                        // patch offset to write last element
+                        bool last_element = row_index >= count-1;
                         DictionaryHelperStream::WriteCallback write_callback = DictionaryHelperStream::get_write_callback(child.get_buffer_format());
-                        if (!write_callback(stream, buffer, &buffer_offsets[column_index]))
+                        if (!write_callback(stream, buffer, &buffer_offsets[column_index], !last_element))
                             return false;
 
-                        if (row_index >= count-1)
-                        {
+                        if (last_element)
                             ++column_finished_count;
-                            break;
-                        }
 
                         break;
                     }

@@ -150,128 +150,139 @@ namespace Gorilla
     }
 
     //! @brief      write_buffer_element_bool
-    inline bool write_buffer_element_bool(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_bool(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_bool(stream, *(bool*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(bool);
+        if (increment_offset)
+            *offset += sizeof(bool);
 
         return true;
     }
 
     //! @brief      write_buffer_element_uint8_t
-    inline bool write_buffer_element_uint8_t(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_uint8_t(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_uint64(stream, *(uint8_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(uint8_t);
+        if (increment_offset)
+            *offset += sizeof(uint8_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_uint16_t
-    inline bool write_buffer_element_uint16_t(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_uint16_t(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_uint64(stream, *(uint16_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(uint16_t);
+        if (increment_offset)
+            *offset += sizeof(uint16_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_uint32_t
-    inline bool write_buffer_element_uint32_t(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_uint32_t(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_uint64(stream, *(uint32_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(uint32_t);
+        if (increment_offset)
+            *offset += sizeof(uint32_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_uint64_t
-    inline bool write_buffer_element_uint64_t(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_uint64_t(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_uint64(stream, *(uint64_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(uint64_t);
+        if (increment_offset)
+            *offset += sizeof(uint64_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_int8
-    inline bool write_buffer_element_int8(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_int8(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_int64(stream, *(int8_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(int8_t);
+        if (increment_offset)
+            *offset += sizeof(int8_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_int16
-    inline bool write_buffer_element_int16(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_int16(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_int64(stream, *(int16_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(int16_t);
+        if (increment_offset)
+            *offset += sizeof(int16_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_int32
-    inline bool write_buffer_element_int32(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_int32(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_int64(stream, *(int32_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(int32_t);
+        if (increment_offset)
+            *offset += sizeof(int32_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_int64
-    inline bool write_buffer_element_int64(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_int64(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_int64(stream, *(int64_t*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(int64_t);
+        if (increment_offset)
+            *offset += sizeof(int64_t);
 
         return true;
     }
 
     //! @brief      write_buffer_element_float32
-    inline bool write_buffer_element_float32(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_float32(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_double(stream, *(float*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(float);
+        if (increment_offset)
+            *offset += sizeof(float);
 
         return true;
     }
 
     //! @brief      write_buffer_element_float64
-    inline bool write_buffer_element_float64(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_float64(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         if (!write_double(stream, *(double*)((uint8_t*)value + *offset)))
             return false;
 
-        *offset += sizeof(double);
+        if (increment_offset)
+            *offset += sizeof(double);
 
         return true;
     }
 
     //! @brief      write_buffer_element_string
-    inline bool write_buffer_element_string(StreamWriter *stream, const void *value, uint32_t *offset)
+    inline bool write_buffer_element_string(StreamWriter *stream, const void *value, uint32_t *offset, bool increment_offset)
     {
         char *allocated_string = (char*)value + *offset;
         uint32_t length = *(uint32_t*)allocated_string;
@@ -279,7 +290,8 @@ namespace Gorilla
         if (!write_string(stream, allocated_string, length))
             return false;
 
-        *offset += sizeof(uint32_t) + length + 1;
+        if (increment_offset)
+            *offset += sizeof(uint32_t) + length + 1;
 
         return true;
     }

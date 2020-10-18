@@ -25,7 +25,7 @@ namespace Gorilla
     class DictionaryHelperStream
     {
     public:
-        typedef bool (*WriteCallback)(StreamWriter *stream, const void *data, uint32_t *offset);
+        typedef bool (*WriteCallback)(StreamWriter *stream, const void *data, uint32_t *offset, bool increment_offset);
 
         // static bool read(StreamReader *stream, DictionaryNode *node);
         static bool write(StreamWriter *stream, bool value);
