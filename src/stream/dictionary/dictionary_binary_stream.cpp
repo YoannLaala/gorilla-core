@@ -95,8 +95,7 @@ namespace Gorilla
         const uint32_t page_completed_count = page_count - 1;
         for(uint32_t i = 0; i < page_completed_count; ++i)
         {
-            uint32_t page_size = (uint32_t)(dictionary->m_pages[i+1] - dictionary->m_pages[i]);
-            if (!stream->write(dictionary->m_pages[i], page_size))
+            if (!stream->write(dictionary->m_pages[i], dictionary->m_page_size))
                 return false;
         }
         if (!stream->write(dictionary->m_pages[page_completed_count], dictionary->m_current_offset))
