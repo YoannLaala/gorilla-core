@@ -46,6 +46,7 @@ namespace Gorilla
         void clear();
 
     private:
+        DictionaryId        get_parent_id_internal(DictionaryData *child, DictionaryId parent_id = DictionaryId::INVALID) const;
         DictionaryId        get_id_internal(DictionaryData *parent, const char *name) const;
 
         DictionaryNode      get_node_internal(DictionaryData *parent, const char *name) const;
@@ -53,6 +54,7 @@ namespace Gorilla
         DictionaryNode      add_node_internal(DictionaryData *parent, const char *name);
         void                remove_node_internal(DictionaryData *parent, const char *name);
 
+        DictionaryData*     get_parent_data_internal(DictionaryData *child, DictionaryId parent_id = DictionaryId::INVALID) const;
         DictionaryData*     get_data_internal(DictionaryData *parent, const char *name) const;
         DictionaryData*     get_data_internal(DictionaryId id) const;
         const char*         get_data_name_internal(DictionaryData *data) const;

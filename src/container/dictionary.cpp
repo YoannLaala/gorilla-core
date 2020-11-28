@@ -46,6 +46,36 @@ namespace Gorilla
         m_current_offset = m_page_size;
     }
 
+    //! @brief      get_parent_id_internal
+    DictionaryId Dictionary::get_parent_id_internal(DictionaryData *child, DictionaryId parent_id /*= DictionaryId::INVALID*/) const
+    {
+        const TDictionaryData<DictionaryData::Format::OBJECT> *parent_data = nullptr;
+        if (parent_id == DictionaryId::INVALID)
+            parent_data = &m_root;
+        else
+            parent_data = reinterpret_cast<TDictionaryData<DictionaryData::Format::OBJECT>*>(get_data_internal(parent_id));
+
+        DictionaryId id = parent_data->FirstChildId;
+        while (id != DictionaryId::INVALID)
+        {
+            DictionaryData *data = get_data_internal(id);
+            if (data == child)
+                return parent_id;
+
+            DictionaryData::Format format = data->get_format();
+            if (format == DictionaryData::Format::OBJECT || format == DictionaryData::Format::ARRAY)
+            {
+                DictionaryId parent_id = get_parent_id_internal(child, id);
+                if(parent_id != DictionaryId::INVALID)
+                    return parent_id;
+            }
+
+            id = data->get_next_id();
+        }
+
+        return DictionaryId::INVALID;
+    }
+
     //! @brief      get_id_internal
     DictionaryId Dictionary::get_id_internal(DictionaryData *parent, const char *name) const
     {
@@ -132,6 +162,16 @@ namespace Gorilla
                 current_id = next_id;
             }
         }
+    }
+
+    //! @brief      get_parent_data_internal
+    DictionaryData* Dictionary::get_parent_data_internal(DictionaryData *child, DictionaryId parent_id /*= DictionaryId::INVALID*/) const
+    {
+        DictionaryId id = get_parent_id_internal(child, parent_id);
+        if (parent_id == DictionaryId::INVALID)
+            return (DictionaryData*)&m_root;
+
+        return get_data_internal(parent_id);
     }
 
     //! @brief      get_data_internal
@@ -245,6 +285,33 @@ namespace Gorilla
         {
             DictionaryData *data_reallocated = allocate_data_internal(size);
             data_reallocated->set_hash(data->get_hash());
+
+            // patch parent and siblings
+            TDictionaryData<DictionaryData::Format::OBJECT> *parent_data = reinterpret_cast<TDictionaryData<DictionaryData::Format::OBJECT>*>(get_parent_data_internal(data));
+
+            DictionaryData *previous_data = nullptr;
+            DictionaryId id = parent_data->FirstChildId;
+            while (id != DictionaryId::INVALID)
+            {
+                DictionaryData *child_data = get_data_internal(id);
+                if (child_data == data)
+                {
+                    if (previous_data)
+                        previous_data->set_next_id(m_current_id);
+
+                    if (id == parent_data->FirstChildId)
+                        parent_data->FirstChildId = m_current_id;
+
+                    if (id == parent_data->LastChildId)
+                        parent_data->LastChildId = m_current_id;
+                }
+                previous_data = child_data;
+                id = child_data->get_next_id();
+            }
+            data_reallocated->set_next_id(data->get_next_id());
+            m_current_offset = m_page_size;
+            m_current_id.PageOffset = m_page_size;
+
             return data_reallocated;
         }
 
