@@ -108,7 +108,6 @@ namespace Gorilla
         void                    expand          (uint32_t character_count, uint32_t *old_size_out, uint32_t *new_size_out);
 
     private:
-        wchar_t m_stack[STRING16_STACK_CAPACITY];
         Vector<wchar_t> m_characters;
     };
 
