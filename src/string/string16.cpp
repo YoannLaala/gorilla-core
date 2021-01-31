@@ -115,38 +115,39 @@ namespace Gorilla
     }
 
     //! @brief      insert
-    String16& String16::insert(const wchar_t* text, uint32_t index, uint32_t length /*= 0*/)
+    String16& String16::insert(const wchar_t* text, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         if(text)
         {
             // Get the real size for the new subtext
-            if(length == 0)
-            {
+            if(length == (uint32_t)-1)
                 length = (uint32_t)wcslen(text);
-            }
 
-            uint32_t old_size, new_size;
-            expand(length, &old_size, &new_size);
-
-            // Move the right block if necessary
-            uint32_t move_size = old_size - index;
-            if(move_size)
+            if (length)
             {
-                MEMCPY(&m_characters[index+length], &m_characters[index], move_size * sizeof(wchar_t));
-            }
+                uint32_t old_size, new_size;
+                expand(length, &old_size, &new_size);
 
-            // Copy
-            MEMCPY(&m_characters[index], text, length * sizeof(wchar_t));
+                // Move the right block if necessary
+                uint32_t move_size = old_size - index;
+                if(move_size)
+                {
+                    MEMCPY(&m_characters[index+length], &m_characters[index], move_size * sizeof(wchar_t));
+                }
+
+                // Copy
+                MEMCPY(&m_characters[index], text, length * sizeof(wchar_t));
+            }
         }
 
         return *this;
     }
 
     //! @brief      insert
-    String16& String16::insert(uint64_t value, uint8_t base, bool is_negative, uint32_t index, uint32_t length /*= 0*/)
+    String16& String16::insert(uint64_t value, uint8_t base, bool is_negative, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         // Search for interger length only if needed with numbers only i
-        if(length == 0)
+        if(length == (uint32_t)-1)
         {
             length = is_negative ? 1 : 0;
             for(uint64_t i = value; i != 0; i/=base)
@@ -183,7 +184,7 @@ namespace Gorilla
     }
 
     //! @brief      append
-    String16& String16::insert(int64_t value, uint32_t index, uint32_t length /*= 0*/)
+    String16& String16::insert(int64_t value, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         bool is_negative = false;
         if(value < 0)
@@ -196,13 +197,13 @@ namespace Gorilla
     }
 
     //! @brief      append
-    String16& String16::insert(uint64_t value, uint32_t index, uint32_t length /*= 0*/)
+    String16& String16::insert(uint64_t value, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(value, 10, false, index, length);
     }
 
     //! @brief      set
-    String16& String16::set(const wchar_t* text, uint32_t length /*= 0*/)
+    String16& String16::set(const wchar_t* text, uint32_t length /*= (uint32_t)-1*/)
     {
         m_characters.clear();
         return insert(text, 0, length);
@@ -223,21 +224,21 @@ namespace Gorilla
     }
 
     //! @brief      set
-    String16& String16::set(int64_t value, uint32_t length /*= 0*/)
+    String16& String16::set(int64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         m_characters.clear();
         return insert(value, 0, length);
     }
 
     //! @brief      set
-    String16& String16::set(uint64_t value, uint32_t length /*= 0*/)
+    String16& String16::set(uint64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         m_characters.clear();
         return insert(value, 0, length);
     }
 
     //! @brief      append
-    String16& String16::append(const wchar_t* text, uint32_t length /*= 0*/)
+    String16& String16::append(const wchar_t* text, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(text, m_characters.get_size(), length);
     }
@@ -255,19 +256,19 @@ namespace Gorilla
     }
 
     //! @brief      append
-    String16& String16::append(int64_t value, uint32_t length /*= 0*/)
+    String16& String16::append(int64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(value, m_characters.get_size(), length);
     }
 
     //! @brief      append
-    String16& String16::append(uint64_t value, uint32_t length /*= 0*/)
+    String16& String16::append(uint64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(value, m_characters.get_size(), length);
     }
 
     //! @brief      prepend
-    String16& String16::prepend(const wchar_t* text, uint32_t length /*= 0*/)
+    String16& String16::prepend(const wchar_t* text, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(text, 0, length);
     }
@@ -285,13 +286,13 @@ namespace Gorilla
     }
 
     //! @brief      prepend
-    String16& String16::prepend(int64_t value, uint32_t length /*= 0*/)
+    String16& String16::prepend(int64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(value, 0, length);
     }
 
     //! @brief      prepend
-    String16& String16::prepend(uint64_t value, uint32_t length /*= 0*/)
+    String16& String16::prepend(uint64_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert(value, 0, length);
     }
@@ -345,8 +346,7 @@ namespace Gorilla
         m_characters[size] = 0;
     }
 
-    //!	@brief		operator=
-    //!	@date		2015-04-04
+    //! @brief      operator=
     String16& String16::operator= (const wchar_t* text)
     {
         return set(text);
