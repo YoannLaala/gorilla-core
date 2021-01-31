@@ -186,7 +186,7 @@ namespace Gorilla
     template <typename TYPE>
     void Vector<TYPE>::remove(const TYPE &value)
     {
-        uint32_t index = find(value);
+        uint32_t index = find_index(value);
         if (index != (uint32_t)-1)
         {
             remove_index(index);
