@@ -49,36 +49,36 @@ namespace Gorilla
         uint32_t            find_last       (const char *value, uint32_t start_index = 0) const;
         inline bool         contains        (const char  *value, uint32_t start_index = 0) const;
 
-        String&             insert          (const char *value,  uint32_t index, uint32_t length = 0);
-        String&             insert          (uint64_t value, uint8_t base, bool is_negative, uint32_t index, uint32_t length = 0);
-        inline String&      insert          (int32_t value, uint32_t index, uint32_t length = 0);
-        inline String&      insert          (uint32_t value, uint32_t index, uint32_t length = 0);
-        String&             insert          (int64_t value, uint32_t index, uint32_t length = 0);
-        String&             insert          (uint64_t value, uint32_t index, uint32_t length = 0);
+        String&             insert          (const char *value,  uint32_t index, uint32_t length = (uint32_t)-1);
+        String&             insert          (uint64_t value, uint8_t base, bool is_negative, uint32_t index, uint32_t length = (uint32_t)-1);
+        inline String&      insert          (int32_t value, uint32_t index, uint32_t length = (uint32_t)-1);
+        inline String&      insert          (uint32_t value, uint32_t index, uint32_t length = (uint32_t)-1);
+        String&             insert          (int64_t value, uint32_t index, uint32_t length = (uint32_t)-1);
+        String&             insert          (uint64_t value, uint32_t index, uint32_t length = (uint32_t)-1);
 
-        String&             set             (const char *value, uint32_t length = 0);
+        String&             set             (const char *value, uint32_t length = (uint32_t)-1);
         String&             set             (const String& value);
         String&             set             (char value);
-        inline String&      set             (int32_t value, uint32_t length = 0);
-        inline String&      set             (uint32_t value, uint32_t length = 0);
-        String&             set             (int64_t value, uint32_t length = 0);
-        String&             set             (uint64_t value, uint32_t length = 0);
+        inline String&      set             (int32_t value, uint32_t length = (uint32_t)-1);
+        inline String&      set             (uint32_t value, uint32_t length = (uint32_t)-1);
+        String&             set             (int64_t value, uint32_t length = (uint32_t)-1);
+        String&             set             (uint64_t value, uint32_t length = (uint32_t)-1);
 
-        String&             append          (const char *value, uint32_t length = 0);
+        String&             append          (const char *value, uint32_t length = (uint32_t)-1);
         String&             append          (const String& value);
         String&             append          (char value);
-        inline String&      append          (int32_t value, uint32_t length = 0);
-        inline String&      append          (uint32_t value, uint32_t length = 0);
-        String&             append          (int64_t value, uint32_t length = 0);
-        String&             append          (uint64_t value, uint32_t length = 0);
+        inline String&      append          (int32_t value, uint32_t length = (uint32_t)-1);
+        inline String&      append          (uint32_t value, uint32_t length = (uint32_t)-1);
+        String&             append          (int64_t value, uint32_t length = (uint32_t)-1);
+        String&             append          (uint64_t value, uint32_t length = (uint32_t)-1);
 
-        String&             prepend         (const char *value, uint32_t length = 0);
+        String&             prepend         (const char *value, uint32_t length = (uint32_t)-1);
         String&             prepend         (const String& value);
         String&             prepend         (char value);
-        inline String&      prepend         (int32_t value, uint32_t length = 0);
-        inline String&      prepend         (uint32_t value, uint32_t length = 0);
-        String&             prepend         (int64_t value, uint32_t length = 0);
-        String&             prepend         (uint64_t value, uint32_t length = 0);
+        inline String&      prepend         (int32_t value, uint32_t length = (uint32_t)-1);
+        inline String&      prepend         (uint32_t value, uint32_t length = (uint32_t)-1);
+        String&             prepend         (int64_t value, uint32_t length = (uint32_t)-1);
+        String&             prepend         (uint64_t value, uint32_t length = (uint32_t)-1);
 
         String&             replace         (const char *old_text, const char *new_text);
         String&             remove          (const char *value);
@@ -153,49 +153,49 @@ namespace Gorilla
     }
 
     //! @brief      insert
-    String& String::insert(int32_t value, uint32_t index, uint32_t length /*= 0*/)
+    String& String::insert(int32_t value, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert((int64_t)value, index, length);
     }
 
     //! @brief      insert
-    String& String::insert(uint32_t value, uint32_t index, uint32_t length /*= 0*/)
+    String& String::insert(uint32_t value, uint32_t index, uint32_t length /*= (uint32_t)-1*/)
     {
         return insert((uint64_t)value, index, length);
     }
 
     //! @brief      set
-    String& String::set(int32_t value, uint32_t length /*= 0*/)
+    String& String::set(int32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return set((int64_t)value, length);
     }
 
     //! @brief      set
-    String& String::set(uint32_t value, uint32_t length /*= 0*/)
+    String& String::set(uint32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return set((uint64_t)value, length);
     }
 
     //! @brief      append
-    String& String::append(int32_t value, uint32_t length /*= 0*/)
+    String& String::append(int32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return append((int64_t)value, length);
     }
 
     //! @brief      append
-    String& String::append(uint32_t value, uint32_t length /*= 0*/)
+    String& String::append(uint32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return append((uint64_t)value, length);
     }
 
     //! @brief      prepend
-    String& String::prepend(int32_t value, uint32_t length /*= 0*/)
+    String& String::prepend(int32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return prepend((int64_t)value, length);
     }
 
     //! @brief      prepend
-    String& String::prepend(uint32_t value, uint32_t length /*= 0*/)
+    String& String::prepend(uint32_t value, uint32_t length /*= (uint32_t)-1*/)
     {
         return prepend((uint32_t)value, length);
     }
