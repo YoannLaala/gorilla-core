@@ -34,6 +34,7 @@ namespace Gorilla
         String(const char *value);
         String(const char *value, uint32_t length);
         String(const String& value);
+        String(String&& value);
         ~String();
 
         inline const char*  get_buffer      () const;
@@ -86,6 +87,7 @@ namespace Gorilla
 
         String&             operator=       (const char *value);
         String&             operator=       (const String& value);
+        String&             operator=       (String&& value);
         inline String&      operator=       (int32_t value);
         inline String&      operator=       (uint32_t value);
         String&             operator=       (int64_t value);

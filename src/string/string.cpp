@@ -36,6 +36,13 @@ namespace Gorilla
         set(text.get_buffer(), text.get_length());
     }
 
+    //! @brief      constructor
+    String::String(String&& text)
+        : m_characters(std::move(text.m_characters))
+    {
+        // nothing to do
+    }
+
     //! @brief      destructor
     String::~String()
     {
@@ -364,6 +371,13 @@ namespace Gorilla
     String& String::operator= (const String& text)
     {
         return set(text.get_buffer(), text.get_length());
+    }
+
+    //! @brief      operator=
+    String& String::operator= (String&& text)
+    {
+        m_characters = std::move(text.m_characters);
+        return *this;
     }
 
     //! @brief      operator=
