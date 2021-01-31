@@ -505,6 +505,16 @@ void test_vector()
     TEST(values.get_size() == 2);
     TEST(values.get_capacity() == 4);
     TEST(values[1] == 3);
+
+    values.remove(7);
+    TEST(values.get_size() == 2);
+    TEST(values.find_index(3) == 1);
+    values.remove(3);
+    TEST(values.find_index(3) == (uint32_t)-1);
+    values.remove(3);
+    TEST(values.get_size() == 1);
+    TEST(values.get_capacity() == 4);
+    TEST(values[0] == 1);
 }
 
 void test_buffer_queue()
