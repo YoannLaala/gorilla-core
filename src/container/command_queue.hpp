@@ -25,11 +25,15 @@ namespace Gorilla
         inline void     clear           ();
 
         template<typename TYPE, int(TYPE::*Callback)(void*), typename DATA>
-        void            push(TYPE *object, const DATA& data);
+        void            push(TYPE *object, DATA& data);
+        template<typename TYPE, int(TYPE::*Callback)(void*), typename DATA>
+        void            push(TYPE *object, DATA&& data);
         template<typename TYPE, int(TYPE::*Callback)(void)>
         void            push(TYPE *object);
         template<typename DATA>
-        void            push(int(*callback)(void*), const DATA& data);
+        void            push(int(*callback)(void*), DATA& data);
+        template<typename DATA>
+        void            push(int(*callback)(void*), DATA&& data);
         void            push(int(*callback)(void));
 
         int             pop();
@@ -121,7 +125,7 @@ namespace Gorilla
     }
 
     template<typename TYPE, int(TYPE::*Callback)(void*), typename DATA>
-    void CommandQueue::push(TYPE *object, const DATA& data)
+    void CommandQueue::push(TYPE *object, DATA& data)
     {
         uint32_t command_size = sizeof(CommandMethodDataHeader) + sizeof(DATA);
         CommandMethodDataHeader *header = (CommandMethodDataHeader*)m_commands.push(command_size);
@@ -129,8 +133,22 @@ namespace Gorilla
         header->Callback = &unpack_method_data<TYPE, Callback>;
         header->Object = object;
 
-        DATA& buffer = *(DATA*)(((uint8_t*)header) + sizeof(CommandMethodDataHeader));
-        buffer = std::move(data);
+        void *address = (((uint8_t*)header) + sizeof(CommandMethodDataHeader));
+        DATA *data_buffer = new (address) DATA();
+        *data_buffer = data;
+    }
+
+    template<typename TYPE, int(TYPE::*Callback)(void*), typename DATA>
+    void CommandQueue::push(TYPE *object, DATA&& data)
+    {
+        uint32_t command_size = sizeof(CommandMethodDataHeader) + sizeof(DATA);
+        CommandMethodDataHeader *header = (CommandMethodDataHeader*)m_commands.push(command_size);
+        header->Format = Format::METHOD_DATA;
+        header->Callback = &unpack_method_data<TYPE, Callback>;
+        header->Object = object;
+
+        DATA *data_buffer = (DATA*)(((uint8_t*)header) + sizeof(CommandMethodDataHeader));
+        *data_buffer = std::move(data);
     }
 
     template<typename TYPE, int(TYPE::*Callback)(void)>
@@ -144,15 +162,28 @@ namespace Gorilla
     }
 
     template<typename DATA>
-    void CommandQueue::push(int(*callback)(void*), const DATA& data)
+    void CommandQueue::push(int(*callback)(void*), DATA& data)
     {
         uint32_t command_size = sizeof(CommandCallbackDataHeader) + sizeof(DATA);
         CommandCallbackDataHeader *header = (CommandCallbackDataHeader*)m_commands.push(command_size);
         header->Format = Format::CALLBACK_DATA;
         header->Callback = callback;
 
-        DATA& buffer = *(DATA*)(((uint8_t*)header) + sizeof(CommandCallbackDataHeader));
-        buffer = std::move(data);
+        void *address = (((uint8_t*)header) + sizeof(CommandCallbackDataHeader));
+        DATA *data_buffer = new (address) DATA();
+        *data_buffer = data;
+    }
+
+    template<typename DATA>
+    void CommandQueue::push(int(*callback)(void*), DATA&& data)
+    {
+        uint32_t command_size = sizeof(CommandCallbackDataHeader) + sizeof(DATA);
+        CommandCallbackDataHeader *header = (CommandCallbackDataHeader*)m_commands.push(command_size);
+        header->Format = Format::CALLBACK_DATA;
+        header->Callback = callback;
+
+        DATA *data_buffer = (DATA*)(((uint8_t*)header) + sizeof(CommandCallbackDataHeader));
+        *data_buffer = std::move(data);
     }
 
     void CommandQueue::swap(CommandQueue& queue)
