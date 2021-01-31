@@ -119,7 +119,6 @@ namespace Gorilla
 
     private:
         Vector<char>        m_characters;
-        char                m_stack[STRING_STACK_CAPACITY];
     };
 
     //! @brief      get_buffer

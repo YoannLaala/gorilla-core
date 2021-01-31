@@ -12,8 +12,7 @@ namespace Gorilla
     //! @brief      constructor
     String::String()
     {
-        m_stack[0] = 0;
-        m_characters.set_buffer(m_stack, 0, STRING_STACK_CAPACITY, false);
+        // nothing to do
     }
 
     //! @brief      constructor
