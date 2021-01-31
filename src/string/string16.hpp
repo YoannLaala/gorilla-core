@@ -23,6 +23,7 @@ namespace Gorilla
         String16();
         String16(const wchar_t *text);
         String16(const String16& text);
+        String16(String16&& text);
         String16(uint32_t size);
         ~String16();
 
@@ -76,6 +77,7 @@ namespace Gorilla
 
         String16&               operator=       (const wchar_t *text);
         String16&               operator=       (const String16& text);
+        String16&               operator=       (String16&& text);
         inline String16&        operator=       (int32_t value);
         inline String16&        operator=       (uint32_t value);
         String16&               operator=       (int64_t value);

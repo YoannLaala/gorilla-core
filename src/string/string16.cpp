@@ -31,6 +31,13 @@ namespace Gorilla
     }
 
     //! @brief      Constructor
+    String16::String16(String16&& text)
+        : m_characters(std::move(text.m_characters))
+    {
+        // nothing to do
+    }
+
+    //! @brief      Constructor
     String16::String16(uint32_t size)
         : String16()
     {
@@ -356,6 +363,13 @@ namespace Gorilla
     String16& String16::operator= (const String16& text)
     {
         return set(text.get_buffer(), text.get_length());
+    }
+
+    //! @brief      operator=
+    String16& String16::operator= (String16&& text)
+    {
+        m_characters = std::move(text.m_characters);
+        return *this;
     }
 
     //! @brief      operator=
