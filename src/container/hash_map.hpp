@@ -30,8 +30,8 @@ namespace Gorilla
         HashMap();
         ~HashMap();
 
-        inline uint32_t       get_size    () const { return m_nodes.get_size(); }
-        inline uint32_t       get_capacity() const { return m_nodes.get_capacity(); }
+        inline uint32_t     get_size    () const { return m_nodes.get_size(); }
+        inline uint32_t     get_capacity() const { return m_nodes.get_capacity(); }
         inline bool         is_empty    () const { return m_nodes.is_empty(); }
         inline void         clear       () { MEMSET(&m_nodes[0], -1, sizeof(Node) * m_nodes.get_capacity()); m_nodes.clear(); }
 

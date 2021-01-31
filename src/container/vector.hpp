@@ -22,8 +22,8 @@ namespace Gorilla
         Vector  (const Vector<TYPE> &&values);
         ~Vector	();
 
-        inline uint32_t           get_size        () const;
-        inline uint32_t           get_capacity    () const;
+        inline uint32_t         get_size        () const;
+        inline uint32_t         get_capacity    () const;
         inline bool             is_empty        () const;
         inline void             clear           ();
 
@@ -39,7 +39,7 @@ namespace Gorilla
         void                    remove          (const TYPE &value);
         void                    remove_index    (uint32_t index);
 
-        uint32_t                  find_index      (const TYPE &value) const;
+        uint32_t                find_index      (const TYPE &value) const;
         void                    sort            ();
 
         inline void             resize          (uint32_t size);
@@ -60,7 +60,7 @@ namespace Gorilla
         inline const TYPE&      operator[]      (uint32_t index) const;
 
     private:
-        TYPE*           m_array;
+        TYPE*             m_array;
         uint32_t          m_capacity;
         uint32_t          m_size:31;    // Limit to 31bit to allow heap/stack
         uint32_t          m_heap:1;
