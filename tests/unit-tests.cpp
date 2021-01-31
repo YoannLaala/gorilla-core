@@ -632,6 +632,19 @@ struct CommandQueueStruct
     }
 };
 
+struct CommandData
+{
+    String foo;
+};
+
+int command_queue_callback_5(void *data)
+{
+    CommandData *foo = (CommandData*)data;
+    if (foo->foo == "bar")
+        return 0;
+    return -1;
+}
+
 void test_command_queue()
 {
     CommandQueueStruct object;
@@ -667,6 +680,16 @@ void test_command_queue()
 
     TEST(queue.is_empty() == true);
     TEST(queue.get_size() == 0);
+
+
+    CommandData command_data =  {
+        "bar"
+    };
+    CommandQueue foo_queue;
+    foo_queue.push(&command_queue_callback_5, command_data);
+    TEST(foo_queue.pop() == 0);
+    foo_queue.push(&command_queue_callback_5, std::move(command_data));
+    TEST(foo_queue.pop() == 0);
 }
 
 void test_dictionary_json(Dictionary *dictionary)
