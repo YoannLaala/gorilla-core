@@ -5,6 +5,6 @@ includedir=${prefix}/include
 
 Name: Gorilla Core
 Description: Cross platform library offering light & fast standard c++ classes
-Version: 1.2.4
+Version: 1.2.5
 Libs: -L${libdir} @PC_LINK_FLAGS@
 Cflags: -I${includedir}
