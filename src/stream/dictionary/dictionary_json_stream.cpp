@@ -12,19 +12,6 @@
 ******************************************************************************/
 namespace Gorilla
 {
-    enum class Operation
-    {
-        BEGIN_OBJECT = 0,
-        END_OBJECT,
-        BEGIN_ARRAY,
-        END_ARRAY,
-        STRING,
-        ASSIGN,
-        VALUE,
-        NEXT_MEMBER,
-        INDENT,
-        END_OF_FILE,
-    };
     bool parse_string(char **cursor, const char *buffer_end, String *value_out);
     bool parse_data(char **cursor, const char *buffer_end, DictionaryNode *node_out);
     bool parse_object(char **cursor, const char *buffer_end, DictionaryNode *node_out);
@@ -34,7 +21,7 @@ namespace Gorilla
     bool write_struct(StreamWriter *stream, DictionaryNode *node, uint32_t level, uint32_t flags);
 
     //! @brief      find_next_operation
-    static Operation find_next_operation(char **cursor, const char *buffer_end)
+    static DictionaryJsonStream::Operation find_next_operation(char **cursor, const char *buffer_end)
     {
         while (*cursor != buffer_end)
         {
@@ -43,24 +30,24 @@ namespace Gorilla
 
             switch (value)
             {
-                case '{': return Operation::BEGIN_OBJECT;
-                case '}': return Operation::END_OBJECT;
-                case '[': return Operation::BEGIN_ARRAY;
-                case ']': return Operation::END_ARRAY;
-                case '"': return Operation::STRING;
-                case ':': return Operation::ASSIGN;
-                case ',': return Operation::NEXT_MEMBER;
+                case '{': return DictionaryJsonStream::Operation::BEGIN_OBJECT;
+                case '}': return DictionaryJsonStream::Operation::END_OBJECT;
+                case '[': return DictionaryJsonStream::Operation::BEGIN_ARRAY;
+                case ']': return DictionaryJsonStream::Operation::END_ARRAY;
+                case '"': return DictionaryJsonStream::Operation::STRING;
+                case ':': return DictionaryJsonStream::Operation::ASSIGN;
+                case ',': return DictionaryJsonStream::Operation::NEXT_MEMBER;
                 case ' ':
                 case '\r':
                 case '\n':
                 case '\t':
                     break;
-                default: return Operation::VALUE;
+                default: return DictionaryJsonStream::Operation::VALUE;
             }
 
         }
 
-        return Operation::END_OF_FILE;
+        return DictionaryJsonStream::Operation::END_OF_FILE;
     }
 
     //! @brief      parse_string
@@ -104,10 +91,10 @@ namespace Gorilla
     //! @brief      parse_data
     bool parse_data(char **cursor, const char *buffer_end, DictionaryNode *node_out)
     {
-        Operation operation = find_next_operation(cursor, buffer_end);
+        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
         switch (operation)
         {
-            case Operation::STRING:
+            case DictionaryJsonStream::Operation::STRING:
             {
                 String value;
                 if (!parse_string(cursor, buffer_end, &value))
@@ -117,7 +104,7 @@ namespace Gorilla
                 break;
             }
 
-            case Operation::VALUE:
+            case DictionaryJsonStream::Operation::VALUE:
             {
                 --*cursor;
 
@@ -163,14 +150,14 @@ namespace Gorilla
                 return true;
             }
 
-            case Operation::BEGIN_OBJECT:
+            case DictionaryJsonStream::Operation::BEGIN_OBJECT:
             {
                 if (!parse_object(cursor, buffer_end, node_out))
                     return false;
                 break;
             }
 
-            case Operation::BEGIN_ARRAY:
+            case DictionaryJsonStream::Operation::BEGIN_ARRAY:
             {
                 if (!parse_array(cursor, buffer_end, node_out))
                     return false;
@@ -187,15 +174,15 @@ namespace Gorilla
     //! @brief      parse_object
     bool parse_object(char **cursor, const char *buffer_end, DictionaryNode *node_out)
     {
-        Operation operation = find_next_operation(cursor, buffer_end);
-        while (operation != Operation::END_OBJECT)
+        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
+        while (operation != DictionaryJsonStream::Operation::END_OBJECT)
         {
             String name;
             if (!parse_string(cursor, buffer_end, &name))
                 return false;
 
             operation = find_next_operation(cursor, buffer_end);
-            if (operation != Operation::ASSIGN)
+            if (operation != DictionaryJsonStream::Operation::ASSIGN)
                 return false;
 
             DictionaryNode member = node_out->add(name.get_buffer());
@@ -203,7 +190,7 @@ namespace Gorilla
                 return false;
 
             operation = find_next_operation(cursor, buffer_end);
-            if (operation == Operation::NEXT_MEMBER)
+            if (operation == DictionaryJsonStream::Operation::NEXT_MEMBER)
                 operation = find_next_operation(cursor, buffer_end);
         }
 
@@ -213,18 +200,18 @@ namespace Gorilla
     //! @brief      parse_array
     bool parse_array(char **cursor, const char *buffer_end, DictionaryNode *node_out)
     {
-        Operation operation = find_next_operation(cursor, buffer_end);
+        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
         switch (operation)
         {
-            case Operation::END_ARRAY:
+            case DictionaryJsonStream::Operation::END_ARRAY:
             {
                 node_out->set_array();
                 return true;
             }
 
             // buffer
-            case Operation::STRING:
-            case Operation::VALUE:
+            case DictionaryJsonStream::Operation::STRING:
+            case DictionaryJsonStream::Operation::VALUE:
             {
                 --*cursor;
 
@@ -241,8 +228,8 @@ namespace Gorilla
                         bool *buffer = node_out->set_buffer_bool(capacity);
                         *buffer = value.Boolean;
 
-                        Operation operation = find_next_operation(cursor, buffer_end);
-                        while (operation == Operation::NEXT_MEMBER)
+                        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
+                        while (operation == DictionaryJsonStream::Operation::NEXT_MEMBER)
                         {
                             if (index >= capacity)
                             {
@@ -251,7 +238,7 @@ namespace Gorilla
                             }
 
                             operation = find_next_operation(cursor, buffer_end);
-                            if (operation != Operation::VALUE)
+                            if (operation != DictionaryJsonStream::Operation::VALUE)
                                 return false;
 
                             const char *begin = *cursor-1;
@@ -278,8 +265,8 @@ namespace Gorilla
                         *buffer = value.Integer;
 
                         StringValue value;
-                        Operation operation = find_next_operation(cursor, buffer_end);
-                        while (operation == Operation::NEXT_MEMBER)
+                        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
+                        while (operation == DictionaryJsonStream::Operation::NEXT_MEMBER)
                         {
                             if (index >= capacity)
                             {
@@ -288,7 +275,7 @@ namespace Gorilla
                             }
 
                             operation = find_next_operation(cursor, buffer_end);
-                            if (operation != Operation::VALUE)
+                            if (operation != DictionaryJsonStream::Operation::VALUE)
                                 return false;
 
                             const char *begin = *cursor-1;
@@ -320,11 +307,11 @@ namespace Gorilla
                         if (!parse_string(cursor, buffer_end, &strings[0]))
                             return false;
 
-                        Operation operation = find_next_operation(cursor, buffer_end);
-                        while (operation == Operation::NEXT_MEMBER)
+                        DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
+                        while (operation == DictionaryJsonStream::Operation::NEXT_MEMBER)
                         {
                             operation = find_next_operation(cursor, buffer_end);
-                            if (operation != Operation::STRING)
+                            if (operation != DictionaryJsonStream::Operation::STRING)
                                 return false;
 
                             if (!parse_string(cursor, buffer_end, &strings.add()))
@@ -350,8 +337,8 @@ namespace Gorilla
                 if (!parse_data(cursor, buffer_end, &child))
                     return false;
 
-                Operation operation = find_next_operation(cursor, buffer_end);
-                while (operation != Operation::END_ARRAY)
+                DictionaryJsonStream::Operation operation = find_next_operation(cursor, buffer_end);
+                while (operation != DictionaryJsonStream::Operation::END_ARRAY)
                 {
                     child = node_out->add();
                     if (!parse_data(cursor, buffer_end, &child))
@@ -378,17 +365,17 @@ namespace Gorilla
 
         const char *buffer_end = buffer + buffer_size;
         char *cursor = (char*)buffer;
-        Operation operation = find_next_operation(&cursor, buffer_end);
+        DictionaryJsonStream::Operation operation = find_next_operation(&cursor, buffer_end);
         switch (operation)
         {
-            case Operation::BEGIN_OBJECT:
+            case DictionaryJsonStream::Operation::BEGIN_OBJECT:
             {
                 if (!parse_object(&cursor, buffer_end, node))
                     return false;
                 break;
             }
 
-            case Operation::BEGIN_ARRAY:
+            case DictionaryJsonStream::Operation::BEGIN_ARRAY:
             {
                 if (!parse_array(&cursor, buffer_end, node))
                     return false;
@@ -403,20 +390,20 @@ namespace Gorilla
     }
 
     //! @brief      write_string
-    bool write_operation(StreamWriter *stream, Operation operation, uint32_t level, uint32_t flags)
+    bool write_operation(StreamWriter *stream, DictionaryJsonStream::Operation operation, uint32_t level, uint32_t flags)
     {
         if (flags & (uint32_t)DictionaryJsonStream::Flag::PRETTY)
         {
             switch (operation)
             {
-                case Operation::BEGIN_OBJECT:
+                case DictionaryJsonStream::Operation::BEGIN_OBJECT:
                 {
                     if (!stream->write("{\n", 2))
                         return false;
                     break;
                 }
 
-                case Operation::END_OBJECT:
+                case DictionaryJsonStream::Operation::END_OBJECT:
                 {
                     if (!stream->write('\n'))
                         return false;
@@ -432,14 +419,14 @@ namespace Gorilla
                     break;
                 }
 
-                case Operation::BEGIN_ARRAY:
+                case DictionaryJsonStream::Operation::BEGIN_ARRAY:
                 {
                     if (!stream->write("[\n", 2))
                         return false;
                     break;
                 }
 
-                case Operation::END_ARRAY:
+                case DictionaryJsonStream::Operation::END_ARRAY:
                 {
                     if (!stream->write('\n'))
                         return false;
@@ -455,21 +442,21 @@ namespace Gorilla
                     break;
                 }
 
-                case Operation::ASSIGN:
+                case DictionaryJsonStream::Operation::ASSIGN:
                 {
                     if (!stream->write(": ", 2))
                         return false;
                     break;
                 }
 
-                case Operation::NEXT_MEMBER:
+                case DictionaryJsonStream::Operation::NEXT_MEMBER:
                 {
                     if (!stream->write(",\n", 2))
                         return false;
                     break;
                 }
 
-                case Operation::INDENT:
+                case DictionaryJsonStream::Operation::INDENT:
                 {
                     for (uint32_t i = 0; i < level; ++i)
                     {
@@ -487,42 +474,42 @@ namespace Gorilla
         {
             switch (operation)
             {
-                case Operation::BEGIN_OBJECT:
+                case DictionaryJsonStream::Operation::BEGIN_OBJECT:
                 {
                     if (!stream->write('{'))
                         return false;
                     break;
                 }
 
-                case Operation::END_OBJECT:
+                case DictionaryJsonStream::Operation::END_OBJECT:
                 {
                     if (!stream->write('}'))
                         return false;
                     break;
                 }
 
-                case Operation::BEGIN_ARRAY:
+                case DictionaryJsonStream::Operation::BEGIN_ARRAY:
                 {
                     if (!stream->write('['))
                         return false;
                     break;
                 }
 
-                case Operation::END_ARRAY:
+                case DictionaryJsonStream::Operation::END_ARRAY:
                 {
                     if (!stream->write(']'))
                         return false;
                     break;
                 }
 
-                case Operation::ASSIGN:
+                case DictionaryJsonStream::Operation::ASSIGN:
                 {
                     if (!stream->write(':'))
                         return false;
                     break;
                 }
 
-                case Operation::NEXT_MEMBER:
+                case DictionaryJsonStream::Operation::NEXT_MEMBER:
                 {
                     if (!stream->write(','))
                         return false;
@@ -542,7 +529,7 @@ namespace Gorilla
     {
         DictionaryHelperStream::WriteCallback write_callback = DictionaryHelperStream::get_write_callback(format);
 
-        if (!write_operation(stream, Operation::INDENT, level, flags))
+        if (!write_operation(stream, DictionaryJsonStream::Operation::INDENT, level, flags))
                 return false;
 
         uint32_t offset = 0;
@@ -551,10 +538,10 @@ namespace Gorilla
 
         for (uint32_t i = 1; i < buffer_count; ++i)
         {
-            if (!write_operation(stream, Operation::NEXT_MEMBER, level, flags))
+            if (!write_operation(stream, DictionaryJsonStream::Operation::NEXT_MEMBER, level, flags))
                 return false;
 
-            if (!write_operation(stream, Operation::INDENT, level, flags))
+            if (!write_operation(stream, DictionaryJsonStream::Operation::INDENT, level, flags))
                 return false;
 
             if (!write_callback(stream, buffer, &offset, true))
@@ -576,7 +563,7 @@ namespace Gorilla
             ++child;
             while(child.is_valid())
             {
-                if (!write_operation(stream, Operation::NEXT_MEMBER, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::NEXT_MEMBER, level, flags))
                     return false;
 
                 if (!write_struct(stream, &child, level, flags))
@@ -591,7 +578,7 @@ namespace Gorilla
     //! @brief      write_struct
     bool write_struct(StreamWriter *stream, DictionaryNode *node, uint32_t level, uint32_t flags)
     {
-        if (!write_operation(stream, Operation::INDENT, level, flags))
+        if (!write_operation(stream, DictionaryJsonStream::Operation::INDENT, level, flags))
             return false;
 
         const char *name = node->get_name();
@@ -600,7 +587,7 @@ namespace Gorilla
             if (!DictionaryHelperStream::write(stream, name))
                 return false;
 
-            if (!write_operation(stream, Operation::ASSIGN, level, flags))
+            if (!write_operation(stream, DictionaryJsonStream::Operation::ASSIGN, level, flags))
                 return false;
         }
 
@@ -706,13 +693,13 @@ namespace Gorilla
                     break;
                 }
 
-                if (!write_operation(stream, Operation::BEGIN_OBJECT, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::BEGIN_OBJECT, level, flags))
                     return false;
 
                 if (!write_children(stream, node, level+1, flags))
                     return false;
 
-                if (!write_operation(stream, Operation::END_OBJECT, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::END_OBJECT, level, flags))
                     return false;
                 break;
             }
@@ -727,13 +714,13 @@ namespace Gorilla
                     return true;
                 }
 
-                if (!write_operation(stream, Operation::BEGIN_ARRAY, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::BEGIN_ARRAY, level, flags))
                     return false;
 
                 if (!write_children(stream, node, level+1, flags))
                     return false;
 
-                if (!write_operation(stream, Operation::END_ARRAY, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::END_ARRAY, level, flags))
                     return false;
                 break;
             }
@@ -752,13 +739,13 @@ namespace Gorilla
                     break;
                 }
 
-                if (!write_operation(stream, Operation::BEGIN_ARRAY, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::BEGIN_ARRAY, level, flags))
                     return false;
 
                 if (!write_buffer(stream, node->get_buffer_format(), buffer, count, level+1, flags))
                     return false;
 
-                if (!write_operation(stream, Operation::END_ARRAY, level, flags))
+                if (!write_operation(stream, DictionaryJsonStream::Operation::END_ARRAY, level, flags))
                     return false;
 
                 break;
