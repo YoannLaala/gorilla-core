@@ -32,6 +32,7 @@ set(HEADERS
     ${CMAKE_CURRENT_SOURCE_DIR}/src/log/log.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/memory/memory.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/memory/memory_manager.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/process/application.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/process/command_line_parser.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/process/process.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/src/stream/dictionary/dictionary_binary_stream.hpp
@@ -83,6 +84,7 @@ if (PLATFORM_WINDOWS)
     set(SOURCES_PLATFORM
         ${CMAKE_CURRENT_SOURCE_DIR}/src/file_system/file_system_windows.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/file_system/file_windows.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/src/process/application_windows.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/process/process_windows.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/thread/condition_variable_windows.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/src/thread/mutex_windows.cpp

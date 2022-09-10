@@ -11,6 +11,7 @@
 #include "file_system/file_system.hpp"
 #include "file_system/path.hpp"
 #include "memory/memory_manager.hpp"
+#include "process/application.hpp"
 #include "process/command_line_parser.hpp"
 #include "process/process.hpp"
 #include "stream/dictionary/dictionary_binary_stream.hpp"
@@ -32,6 +33,19 @@
 using namespace Gorilla;
 
 #define TEST(_condition_) LOG_ASSERT(_condition_, #_condition_);
+
+int32_t test_application_entry_data = 0;
+int32_t test_application_entry()
+{
+    int32_t result = test_application_entry_data++;
+    return result;
+}
+
+void test_application()
+{
+    int32_t result = Application::run(test_application_entry);
+    TEST(result == 1);
+}
 
 void test_hash()
 {
@@ -1308,6 +1322,7 @@ int32_t main(int32_t argc, const char *argv[])
         const char *name;
         void (*callback)();
     } tests[] = {
+        {"application",         &test_application},
         {"hash",                &test_hash},
         {"singleton",           &test_singleton},
         {"vector",              &test_vector},
