@@ -35,7 +35,7 @@ using namespace Gorilla;
 #define TEST(_condition_) LOG_ASSERT(_condition_, #_condition_);
 
 int32_t test_application_entry_data = 0;
-int32_t test_application_entry()
+int32_t test_application_entry(void *user_data)
 {
     int32_t result = test_application_entry_data++;
     return result;

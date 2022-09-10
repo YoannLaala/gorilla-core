@@ -3,7 +3,7 @@
 
 namespace Gorilla
 {
-    int32_t Application::run(int32_t (*callback)())
+    int32_t Application::run(int32_t (*callback)(void*), void *user_data /*= nullptr*/)
     {
         MSG msg = {0};
         while(WM_QUIT != msg.message)
@@ -15,7 +15,7 @@ namespace Gorilla
                 continue;
             }
 
-            int32_t result = callback();
+            int32_t result = callback(user_data);
             if (result != 0)
                 return result;
         }
