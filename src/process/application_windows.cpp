@@ -22,4 +22,9 @@ namespace Gorilla
 
         return 0;
     }
+
+    void Application::quit()
+    {
+        PostQuitMessage(WM_QUIT);
+    }
 }
