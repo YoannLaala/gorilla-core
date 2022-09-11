@@ -316,6 +316,14 @@ void test_path()
 #endif
 
     foo = "";
+    Path::combine(&foo, "a", "b", "c", "d", "../../../");
+#if defined(PLATFORM_WINDOWS)
+    TEST(foo.equals("a\\") == true);
+#else
+    TEST(foo.equals("a/") == true);
+#endif
+
+    foo = "";
     Path::combine(&foo, "a", "b","/../b", "c/d", "../d\\e.bin");
 #if defined(PLATFORM_WINDOWS)
     TEST(foo.equals("a\\b\\c\\d\\e.bin") == true);

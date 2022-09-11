@@ -85,12 +85,10 @@ namespace Gorilla
             const uint32_t move_size = path_length - position_end;
             MEMMOVE(&(*path)[position_start], &(*path)[position_end], move_size);
             path_length -= length;
+            path->resize(path_length);
 
             position = path->find(pattern);
         }
-
-        if (path_length != path->get_length())
-            path->resize(path_length);
     }
 
     //! @brief      combine
